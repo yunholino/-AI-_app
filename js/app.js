@@ -239,6 +239,13 @@
 
     const myWords = document.getElementById('myStatsLearnedWords');
     if (myWords) myWords.textContent = `${learnedWords}개`;
+
+    const statStreak = document.getElementById('statStreakDays');
+    if (statStreak) statStreak.textContent = `${streak}일`;
+
+    // 3-1단계: 오답노트 & 배지/XP 화면 동기화
+    renderWrongNotesList();
+    renderBadgesAndXP();
   }
 
   /**
@@ -288,9 +295,20 @@
       btn.classList.toggle('active', btn.getAttribute('data-sub') === targetSubId);
     });
 
-    // 단어장 탭으로 전환 시 리스트 최신 상태 동기화
+    // 서브 화면 전환 시 최신 상태 동기화 (3-2단계 5대 모듈 연동)
     if (targetSubId === 'sub-vocab') {
-      renderMyVocabList();
+      if (window.AegukMyVocab) window.AegukMyVocab.render();
+      else renderMyVocabList();
+    } else if (targetSubId === 'sub-wrong') {
+      if (window.AegukWrongNotes) window.AegukWrongNotes.render();
+      else renderWrongNotesList();
+    } else if (targetSubId === 'sub-stats') {
+      if (window.AegukStats) window.AegukStats.render();
+    } else if (targetSubId === 'sub-badges') {
+      if (window.AegukBadges) window.AegukBadges.render();
+      else renderBadgesAndXP();
+    } else if (targetSubId === 'sub-settings') {
+      if (window.AegukSettings) window.AegukSettings.render();
     }
   }
 
@@ -666,6 +684,128 @@
     }
   }
 
+  // ========================================================
+  // [34 오답노트] & [36 배지·경험치] 실시간 동적 렌더링 (3-1단계 연동)
+  // ========================================================
+
+  /**
+   * MY [34 오답노트] 목록 렌더링
+   */
+  function renderWrongNotesList() {
+    const listContainer = document.getElementById('wrongNotesListContainer');
+    if (!listContainer || !window.SeodangStorage) return;
+
+    const wrongList = window.SeodangStorage.get('wrongNotes') || [];
+
+    const unreviewedCount = wrongList.filter(w => !w.isReviewed).length;
+    const reviewedCount = wrongList.filter(w => w.isReviewed).length;
+
+    const countWeekly = document.getElementById('wrongCountWeekly');
+    if (countWeekly) countWeekly.innerHTML = `${unreviewedCount}<small>문제</small>`;
+
+    const countRev = document.getElementById('wrongCountReviewed');
+    if (countRev) countRev.innerHTML = `${reviewedCount}<small>문제</small>`;
+
+    listContainer.innerHTML = '';
+
+    if (wrongList.length === 0) {
+      listContainer.innerHTML = `
+        <div class="empty-archive-box">
+          <span>기록된 오답이 없습니다. 훌륭합니다! 🎯</span>
+        </div>
+      `;
+      return;
+    }
+
+    wrongList.forEach(item => {
+      const card = document.createElement('div');
+      card.className = `wrong-card ${item.isReviewed ? 'reviewed' : ''}`;
+      card.innerHTML = `
+        <div class="wrong-main" style="flex: 1;">
+          <h4 class="wrong-question old-hangul" style="font-size: 13.5px; font-weight: 700; margin-bottom: 4px;">
+            ${item.question}
+          </h4>
+          <div class="wrong-choice-row" style="display: flex; flex-direction: column; gap: 2px; font-size: 11.5px; margin-bottom: 4px;">
+            <span class="choice-wrong" style="color: var(--color-seal); font-weight: 600;">
+              ❌ 나의 선택: ${item.userChoice}
+            </span>
+            <span class="choice-correct" style="color: var(--color-dark-green); font-weight: 700;">
+              ✅ 정답: ${item.answer}
+            </span>
+          </div>
+          <span style="font-size: 10px; color: var(--color-ink-light);">학습일: ${item.date || '최근'}</span>
+        </div>
+        <button type="button" class="btn btn-sm ${item.isReviewed ? 'btn-secondary' : 'btn-primary'} btn-review-item" style="font-size: 11px; padding: 5px 9px;">
+          ${item.isReviewed ? '✓ 복습완료' : '다시 복습'}
+        </button>
+      `;
+
+      const reviewBtn = card.querySelector('.btn-review-item');
+      if (!item.isReviewed) {
+        reviewBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          item.isReviewed = true;
+          window.SeodangStorage.set('wrongNotes', wrongList);
+          showToast(`'${item.question.slice(0, 10)}...' 문제를 복습 완료했습니다! ✅`);
+          renderWrongNotesList();
+        });
+      }
+
+      listContainer.appendChild(card);
+    });
+  }
+
+  /**
+   * MY [36 배지·경험치] 화면 렌더링
+   */
+  function renderBadgesAndXP() {
+    if (!window.SeodangStorage) return;
+    const badgesXP = window.SeodangStorage.get('badgesXP') || {
+      level: 7,
+      title: '한글 탐험가',
+      currentXP: 1240,
+      nextLevelXP: 2000,
+      badges: []
+    };
+
+    const levelTitle = document.getElementById('badgeLevelTitle');
+    if (levelTitle) levelTitle.textContent = `LEVEL ${badgesXP.level} ${badgesXP.title}`;
+
+    const xpRatio = document.getElementById('badgeXpRatio');
+    if (xpRatio) xpRatio.textContent = `${badgesXP.currentXP.toLocaleString()} / ${badgesXP.nextLevelXP.toLocaleString()} XP`;
+
+    const xpBar = document.getElementById('badgeXpBar');
+    if (xpBar) {
+      const pct = Math.min(100, Math.round((badgesXP.currentXP / badgesXP.nextLevelXP) * 100));
+      xpBar.style.width = `${pct}%`;
+    }
+
+    const grid = document.getElementById('badgeGrid2x3');
+    if (grid && Array.isArray(badgesXP.badges)) {
+      grid.innerHTML = '';
+      badgesXP.badges.forEach(b => {
+        const item = document.createElement('div');
+        item.className = `badge-item ${b.unlocked ? 'unlocked' : 'locked'}`;
+        item.title = `${b.name} (${b.desc})`;
+        item.innerHTML = `
+          <div class="badge-seal-icon">${b.symbol}</div>
+          <strong class="badge-name">${b.name}</strong>
+          <span class="badge-status">${b.unlocked ? '획득 완료' : '미획득 (도전 중)'}</span>
+        `;
+
+        item.addEventListener('click', function () {
+          if (b.unlocked) {
+            showToast(`🏆 [${b.symbol}] '${b.name}': ${b.desc} (획득 완료)`);
+          } else {
+            showToast(`🔒 [${b.symbol}] '${b.name}': ${b.desc}을(를) 달성하여 해금하세요!`);
+          }
+        });
+
+        grid.appendChild(item);
+      });
+    }
+  }
+
   /**
    * 단어장 검색 및 필터 칩 이벤트 바인딩
    */
@@ -765,6 +905,36 @@
       });
     }
 
+    // 데이터 백업 & 복원 버튼
+    const btnExport = document.getElementById('btnExportJSON');
+    if (btnExport) {
+      btnExport.addEventListener('click', () => {
+        if (window.SeodangStorage) window.SeodangStorage.exportJSON();
+      });
+    }
+
+    const btnImport = document.getElementById('btnImportJSON');
+    const inputImport = document.getElementById('importJsonFileInput');
+    if (btnImport && inputImport) {
+      btnImport.addEventListener('click', () => inputImport.click());
+      inputImport.addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const success = window.SeodangStorage.importJSON(evt.target.result);
+            if (success) {
+              alert('🎉 서당 학습 데이터가 성공적으로 복원되었습니다.');
+              window.location.reload();
+            } else {
+              alert('⚠️ 올바른 백업 JSON 파일 형식이 아닙니다.');
+            }
+          };
+          reader.readAsText(file);
+        }
+      });
+    }
+
     // 2-2단계: AI 풀이 요청 커스텀 이벤트 수신
     window.addEventListener('requestAITranslation', function (e) {
       if (e.detail && e.detail.imageDataUrl) {
@@ -808,7 +978,11 @@
     }
 
     renderAllProfileUI();
-    renderMyVocabList();
+    if (window.AegukMyVocab) window.AegukMyVocab.render();
+    if (window.AegukWrongNotes) window.AegukWrongNotes.render();
+    if (window.AegukStats) window.AegukStats.render();
+    if (window.AegukBadges) window.AegukBadges.render();
+    if (window.AegukSettings) window.AegukSettings.render();
 
     if (window.SeodangStorage && !window.SeodangStorage.isOnboarded()) {
       openOnboardingModal();
@@ -817,7 +991,7 @@
     }
 
     bindEvents();
-    console.log('🏛️ 애국 AI (서당 AI) 2-2단계: AI 풀이 엔진 및 내 단어장 연동 파이프라인 완결');
+    console.log('🏛️ 애국 AI (서당 AI) 3-2단계: MY 마이페이지 5대 서브뷰 및 통계 시각화·JSON 백업 인프라 최종 완성');
   }
 
   if (document.readyState === 'loading') {
@@ -831,6 +1005,8 @@
     switchMySubView: switchMySubView,
     renderAllProfileUI: renderAllProfileUI,
     renderMyVocabList: renderMyVocabList,
+    renderWrongNotesList: renderWrongNotesList,
+    renderBadgesAndXP: renderBadgesAndXP,
     showToast: showToast
   };
 

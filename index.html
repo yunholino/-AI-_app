@@ -3,411 +3,445 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>애국 AI - 고전 국어 학습</title>
-  <!-- 본고딕 / 본명조 웹폰트 (고어 ㆍ, ㅿ, ㆆ, ᄠ 등 유니코드 지원) -->
+  <title>서당 AI - AI 고전 국어 학습 앱</title>
+  
+  <!-- 웹폰트: 본고딕 & 본명조 (옛한글 ㆍ, ㅿ, ㆆ, ᄠ 안전 렌더링) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <!-- 메인 스타일시트 -->
-  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- 전통 서당 테마 반응형 CSS -->
+  <link rel="stylesheet" href="CSS/style.css">
 </head>
 <body>
-  <!-- 앱 반응형 메인 컨테이너 (모바일 360~430px 최적화 / 데스크톱 중앙 정렬 뷰포트) -->
+
+  <!-- 전체 모바일 퍼스트 앱 컨테이너 -->
   <div class="app-container">
 
-    <!-- ========================================================
-         상단 헤더
-         ======================================================== -->
+    <!-- 1. 상단 글로벌 헤더 -->
     <header class="app-header">
       <div class="header-left">
         <div class="app-logo">
-          <span class="seal-mark">愛國</span>
+          <span class="seal-mark">書</span>
           <div class="logo-title-group">
-            <h1 class="logo-text">애국 AI</h1>
-            <span class="logo-sub">고전 국어 AI 훈장</span>
+            <h1 class="logo-text">서당 AI</h1>
+            <span class="logo-sub">고전 국어 스마트 서당</span>
           </div>
         </div>
       </div>
 
       <div class="header-right">
-        <!-- 사용자 닉네임 표시 영역 -->
-        <div class="user-badge" id="headerUserBadge">
+        <!-- 사용자 닉네임 및 신분 배지 -->
+        <div class="user-badge" id="headerUserBadge" title="내 정보">
           <span class="badge-role" id="headerUserRole">선비</span>
           <span class="user-name" id="headerUserName">선비</span>
         </div>
 
-        <!-- 연속 출석일 (스트릭) -->
+        <!-- 연속 출석일 스트릭 배지 -->
         <div class="streak-badge" title="연속 출석일">
           <span class="streak-fire">🔥</span>
-          <span class="streak-count" id="headerStreakCount">12일째</span>
+          <span id="headerStreakCount">1일째</span>
         </div>
 
         <!-- MY 바로가기 버튼 -->
-        <button class="my-shortcut-btn" id="headerMyBtn" aria-label="마이페이지 바로가기">
-          <span class="icon-user">👤</span>
+        <button type="button" class="my-shortcut-btn" id="headerMyBtn" aria-label="마이페이지 바로가기" title="마이페이지">
+          <span>⚙️</span>
         </button>
       </div>
     </header>
 
-    <!-- ========================================================
-         메인 영역 (5개 메인 탭 컨테이너 구조)
-         ======================================================== -->
+    <!-- 2. 메인 스크롤 콘텐츠 영역 (5대 메인 탭) -->
     <main class="main-content">
 
-      <!-- ======================================================
-           ① [홈] 탭: 대시보드 요약 및 오늘의 학습 추천
-           ====================================================== -->
-      <section class="tab-pane active" id="tab-home" data-tab="home">
-        <!-- 오늘의 학습 추천 배너 -->
+      <!-- ============================================== -->
+      <!-- [탭 1] 홈 화면 (대시보드 요약 및 오늘의 학습) -->
+      <!-- ============================================== -->
+      <section id="tab-home" class="tab-pane active">
+        <!-- 훈장 환영 배너 카드 -->
         <div class="welcome-card">
-          <div class="welcome-tag">오늘의 서당 강독</div>
-          <h2 class="welcome-title">오늘도 깊이 있는 고전문학을 음미해 보시겠습니까?</h2>
-          <p class="welcome-desc">연속 12일째 출석 중입니다. 오늘의 추천 학습을 완료하고 50 XP를 획득하세요.</p>
+          <span class="welcome-tag">오늘의 서당 강독</span>
+          <h2 class="welcome-title">학이시습지 불역열호(學而時習之 不亦說乎)</h2>
+          <p class="welcome-desc">배우고 때때로 익히면 또한 즐겁지 아니한가. 오늘 하루도 고전 옛글의 지혜를 함께 밝혀보시지요.</p>
+        </div>
+
+        <!-- 일일 학습 요약 지표 카드 3열 -->
+        <div class="stats-summary-grid">
+          <div class="stat-mini-card">
+            <span class="sm-label">연속 출석</span>
+            <strong class="sm-val" id="homeSummaryStreak">1일</strong>
+            <span class="sm-sub">불타는 열정 🔥</span>
+          </div>
+          <div class="stat-mini-card">
+            <span class="sm-label">익힌 어휘</span>
+            <strong class="sm-val" id="homeSummaryLearnedWords">47개</strong>
+            <span class="sm-sub">어휘 수집가 📚</span>
+          </div>
+          <div class="stat-mini-card">
+            <span class="sm-label">누적 정답률</span>
+            <strong class="sm-val" id="homeSummaryAccuracy">82%</strong>
+            <span class="sm-sub">우수 성적 🎯</span>
+          </div>
         </div>
 
         <!-- 오늘의 추천 어휘 카드 -->
         <div class="card daily-vocab-card">
           <div class="card-header-line">
-            <span class="card-pill">오늘의 필수 고어</span>
-            <span class="card-sub-info">〈훈민정음 언해본〉</span>
+            <span class="card-pill">오늘의 추천 고어</span>
+            <span class="card-sub-info">출전문헌: 훈민정음 언해본</span>
           </div>
           <div class="vocab-highlight">
             <h3 class="highlight-word old-hangul">ᄉᆞᄆᆞᆺ디</h3>
-            <span class="highlight-meaning">【동사】 (뜻이) 서로 통하다, 사무치다</span>
+            <p class="highlight-meaning">【동사】 서로 통하다, 막힘없이 사무치다</p>
           </div>
-          <p class="vocab-example old-hangul">"나랏말ᄊᆞ미 中國에 달아 文字와로 서르 <strong>ᄉᆞᄆᆞᆺ디</strong> 아니ᄒᆞᆯᄊᆡ"</p>
+          <div class="vocab-example">
+            <p class="old-hangul">"나랏말ᄊᆞ미 中國에 달아 文字와로 서르 <strong>ᄉᆞᄆᆞᆺ디</strong> 아니ᄒᆞᆯᄊᆡ"</p>
+          </div>
         </div>
 
-        <!-- 퀵 액션 카드 3종 -->
+        <!-- 바로가기 퀵 액션 카드 3종 -->
+        <h3 class="section-title">빠른 학습 시작</h3>
         <div class="quick-actions-grid">
-          <div class="quick-action-item">
+          <div class="quick-action-item" data-goto="tab-camera">
             <span class="qa-icon">📷</span>
             <div class="qa-text">
-              <strong>옛글 사진 촬영</strong>
-              <span>문서·시험지 AI 풀이</span>
+              <strong>옛글 사진 풀이</strong>
+              <span>고문서 촬영 & AI 번역</span>
             </div>
           </div>
-          <div class="quick-action-item">
+          <div class="quick-action-item" data-goto="tab-study">
             <span class="qa-icon">📖</span>
             <div class="qa-text">
-              <strong>플래시카드 암기</strong>
-              <span>필수 고어 15선</span>
+              <strong>3D 플래시카드</strong>
+              <span>필수 고어 16선 암기장</span>
             </div>
           </div>
-          <div class="quick-action-item">
+          <div class="quick-action-item" data-goto="tab-game">
             <span class="qa-icon">⚔️</span>
             <div class="qa-text">
-              <strong>10초 스피드 퀴즈</strong>
-              <span>AI 봇과 실시간 대결</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 학습 요약 미니 카드 -->
-        <div class="card summary-card">
-          <h4 class="section-title">📊 나의 학습 현황</h4>
-          <div class="summary-stat-row">
-            <div class="summary-stat-box">
-              <span class="num" id="homeSummaryStreak">12일</span>
-              <span class="lbl">연속 학습</span>
-            </div>
-            <div class="summary-stat-box">
-              <span class="num" id="homeSummaryLearnedWords">47개</span>
-              <span class="lbl">외운 단어</span>
-            </div>
-            <div class="summary-stat-box">
-              <span class="num" id="homeSummaryAccuracy">82%</span>
-              <span class="lbl">퀴즈 정답률</span>
+              <strong>10초 타임어택</strong>
+              <span>가상 서당 학우와 퀴즈 대전</span>
             </div>
           </div>
         </div>
       </section>
 
-
-      <!-- ======================================================
-           ② [학습] 탭: 고전문학 대역 뷰어 및 3D 플래시카드 (2-3단계)
-           ====================================================== -->
-      <section class="tab-pane" id="tab-study" data-tab="study">
+      <!-- ============================================== -->
+      <!-- [탭 2] 학습 화면 (플래시카드 & 문학 대역 뷰어) -->
+      <!-- ============================================== -->
+      <section id="tab-study" class="tab-pane">
         <div class="tab-banner">
-          <span class="banner-badge">문학 & 어휘 강독</span>
-          <h2 class="tab-title">고전문학 대역 & 암기</h2>
-          <p class="tab-desc">원문과 현대어를 1:1로 비교하고 3D 입체 플래시카드로 필수 고어를 체득합니다.</p>
+          <span class="banner-badge">고전 강독장</span>
+          <h2 class="tab-title">고전 어휘 & 문학 대역</h2>
+          <p class="tab-desc">3D 플래시카드로 필수 어휘를 외우고, 기출 문학 대역 뷰어로 원문과 번역을 1:1 비교 강독하세요.</p>
         </div>
 
-        <!-- 서브 모드 전환 스위치 (플래시카드 ↔ 대역 뷰어) -->
-        <div class="sub-segmented-control">
-          <button type="button" class="seg-btn active" id="segBtnFlashcard">🎴 3D 플래시카드</button>
-          <button type="button" class="seg-btn" id="segBtnParallel">📜 문학 1:1 대역 뷰어</button>
+        <!-- 상단 서브 모드 전환 세그먼트 버튼 -->
+        <div class="study-mode-switcher">
+          <button type="button" class="seg-btn active" id="segBtnFlashcard">3D 플래시카드</button>
+          <button type="button" class="seg-btn" id="segBtnParallel">고전문학 1:1 대역</button>
         </div>
 
-        <!-- 1. [플래시카드 학습장] 섹션 -->
-        <div class="study-sub-section" id="studyFlashcardSection">
-          
-          <!-- 카드 진행률 프로그레스 바 -->
+        <!-- 1) 3D 플래시카드 학습장 -->
+        <div id="studyFlashcardSection" class="study-sub-content active">
+          <!-- 카드 진행률 인디케이터 -->
           <div class="card-progress-wrapper">
-            <span class="card-progress-text" id="cardProgressText">어휘 1 / 16</span>
+            <span id="cardProgressText" class="card-progress-label">어휘 1 / 16</span>
             <div class="card-progress-track">
-              <div class="card-progress-bar" id="cardProgressBar" style="width: 0%;"></div>
+              <div id="cardProgressBar" class="card-progress-bar" style="width: 6%;"></div>
             </div>
           </div>
 
-          <!-- 3D 회전 플래시카드 씬 -->
-          <div class="flashcard-3d-scene" id="flashcardScene">
-            <div class="flashcard-3d-card" id="flashcardCard">
-              
-              <!-- 카드 앞면 (고어 표제어 & 원문 예문) -->
-              <div class="card-face card-face-front">
-                <div class="face-top-row">
-                  <span class="card-category-badge" id="cardCategoryBadge">옛말 #01</span>
-                  <span class="card-hint-badge">💡 클릭하여 뒤집기</span>
+          <!-- 3D 회전 카드 인터페이스 -->
+          <div class="flashcard-scene">
+            <div class="flashcard-card" id="flashcardCard">
+              <!-- 앞면: 표제어 및 원문 예문 -->
+              <div class="flashcard-face flashcard-front">
+                <span class="card-tag" id="cardCategoryBadge">옛말 #01</span>
+                <h3 class="card-title old-hangul" id="cardMainWord">ᄉᆞᄆᆞᆺ디</h3>
+                <div class="card-example-box">
+                  <p class="card-ex-original old-hangul" id="cardExampleOriginal">"나랏말ᄊᆞ미 中國에 달아 文字와로 서르 ᄉᆞᄆᆞᆺ디 아니ᄒᆞᆯᄊᆡ"</p>
                 </div>
-                <div class="face-center">
-                  <h3 class="card-main-word old-hangul" id="cardMainWord">ᄉᆞᄆᆞᆺ디</h3>
-                </div>
-                <div class="face-bottom">
-                  <span class="face-label">원문 예문</span>
-                  <p class="card-sample-sentence old-hangul" id="cardExampleOriginal">
-                    "나랏말ᄊᆞ미 中國에 달아 文字와로 서르 ᄉᆞᄆᆞᆺ디 아니ᄒᆞᆯᄊᆡ"
-                  </p>
-                </div>
+                <span class="flip-hint-badge">👆 카드를 터치하면 뜻과 해설이 뒤집힙니다</span>
               </div>
 
-              <!-- 카드 뒷면 (현대어 풀이 & 한자 & 문법 팁) -->
-              <div class="card-face card-face-back">
-                <div class="face-top-row">
-                  <span class="card-category-badge back-badge">현대어 풀이</span>
-                  <span class="card-hanja-text" id="cardBackHanja"></span>
+              <!-- 뒷면: 현대어 풀이 및 문법 해설 -->
+              <div class="flashcard-face flashcard-back">
+                <span class="card-tag tag-back">현대어 풀이 & 문법</span>
+                <h4 class="card-back-title old-hangul">
+                  <span id="cardBackMeaning">서로 통하다, 사무치다</span>
+                  <small id="cardBackHanja" class="back-hanja"></small>
+                </h4>
+                <div class="grammar-tip-card">
+                  <strong class="gt-label">문법 포인트</strong>
+                  <p id="cardBackGrammar" class="gt-text">동사 "ᄉᆞᄆᆞᆺ다"의 부정 연결어미형. [통하지 아니하므로]로 해석합니다.</p>
                 </div>
-                <div class="face-center">
-                  <h4 class="card-back-meaning" id="cardBackMeaning">서로 통하다, 사무치다</h4>
-                  <div class="card-grammar-box">
-                    <span class="grammar-tag">문법 팁</span>
-                    <p class="grammar-desc" id="cardBackGrammar">동사 "ᄉᆞᄆᆞᆺ다"의 활용형</p>
-                  </div>
+                <div class="modern-ex-card">
+                  <p id="cardBackExampleModern" class="gt-ex">"우리나라의 말이 중국과 달라 한자와는 서로 통하지 아니하므로"</p>
                 </div>
-                <div class="face-bottom">
-                  <span class="face-label">현대어 풀이 예문</span>
-                  <p class="card-sample-sentence" id="cardExampleModern">
-                    "우리나라의 말이 중국과 달라 한자와는 서로 통하지 아니하므로"
-                  </p>
-                </div>
+                <span class="flip-hint-badge">👆 다시 터치하면 앞면으로 회전합니다</span>
               </div>
-
             </div>
           </div>
 
-          <!-- 플래시카드 하단 학습 액션 버튼 (다시 볼래요 vs 외웠어요) -->
-          <div class="flashcard-actions">
-            <button type="button" class="btn btn-secondary btn-card-action" id="btnVocabAgain">
-              🔄 다시 볼래요
+          <!-- 하단 학습 완료/복습 버튼 그룹 -->
+          <div class="flashcard-controls">
+            <button type="button" class="btn btn-secondary btn-flash" id="btnVocabAgain">
+              <span>🔄</span> 다시 볼래요
             </button>
-            <button type="button" class="btn btn-primary btn-card-action" id="btnVocabMaster">
-              ✅ 외웠어요 (+1)
-            </button>
-          </div>
-
-          <!-- 전체 어휘 학습 완료 화면 -->
-          <div class="card flashcard-complete-box" id="flashcardCompleteBox" style="display: none;">
-            <div class="complete-seal-badge">完</div>
-            <h3 class="complete-title">필수 고어 16선 학습 완료!</h3>
-            <p class="complete-desc">오늘의 고전문학 필수 어휘를 모두 마스터하셨습니다. MY 학습 통계에 학습한 어휘 수가 누적 반영되었습니다.</p>
-            <button type="button" class="btn btn-secondary btn-block" id="btnRestartCards">
-              🔄 처음부터 다시 학습하기
+            <button type="button" class="btn btn-primary btn-flash" id="btnVocabMaster">
+              <span>✅</span> 외웠어요
             </button>
           </div>
 
+          <!-- 전 문항 암기 완료 시 노출 카드 -->
+          <div class="flashcard-complete-box" id="flashcardCompleteBox" style="display: none;">
+            <div class="comp-icon">🎉</div>
+            <h3 class="comp-title">축하합니다! 모든 어휘를 학습했습니다.</h3>
+            <p class="comp-desc">학습한 단어는 MY [35 학습 통계]에 누적 반영되었습니다.</p>
+            <button type="button" class="btn btn-primary" id="btnRestartCards">처음부터 다시 복습하기</button>
+          </div>
         </div>
 
-        <!-- 2. [고전문학 1:1 대역 뷰어] 섹션 -->
-        <div class="study-sub-section" id="studyParallelSection" style="display: none;">
-          <!-- 작품 선택 칩 스위처 -->
+        <!-- 2) 고전문학 1:1 대역 뷰어 -->
+        <div id="studyParallelSection" class="study-sub-content" style="display: none;">
+          <!-- 문학 작품 셀렉터 -->
           <div class="lit-selector-row">
-            <button type="button" class="chip lit-selector-btn active" data-lit="0">정철 〈관동별곡〉</button>
-            <button type="button" class="chip lit-selector-btn" data-lit="1">월명사 〈제망매가〉</button>
+            <button type="button" class="lit-selector-btn active" data-lit-index="0">정철 〈관동별곡〉</button>
+            <button type="button" class="lit-selector-btn" data-lit-index="1">월명사 〈제망매가〉</button>
           </div>
 
-          <!-- 작품 타이틀 카드 -->
-          <div class="card lit-header-card">
-            <span class="card-pill">1:1 원문 대역 읽기</span>
-            <h4 class="lit-current-title" id="litCurrentTitle">정철 〈관동별곡〉 기경</h4>
-            <p class="lit-guide-text">원문 행과 현대어 풀이 행을 나란히 비교하며 읽는 고전문학 대역 뷰어입니다.</p>
+          <div class="parallel-header-card">
+            <h3 class="current-lit-title" id="litCurrentTitle">정철 〈관동별곡 (關東別曲)〉 기경</h3>
+            <span class="current-lit-sub">원문 행과 현대어 풀이를 1:1로 정밀하게 비교하며 감상하세요.</span>
           </div>
 
-          <!-- 1:1 대역 리스트 렌더링 컨테이너 -->
+          <!-- 1:1 대역 행 컨테이너 -->
           <div class="parallel-grid-container" id="parallelGridContainer">
-            <!-- 자바스크립트로 1:1 대역 행 동적 렌더링 -->
+            <!-- 자바스크립트로 동적 렌더링 -->
           </div>
         </div>
-
       </section>
 
-
-      <!-- ======================================================
-           ③ [촬영] 탭: 웹캠 실시간 캡처 및 AI 옛글 풀이 (2-1단계)
-           ====================================================== -->
-      <section class="tab-pane" id="tab-camera" data-tab="camera">
+      <!-- ============================================== -->
+      <!-- [탭 3] 촬영 화면 (카메라 캡처 & AI 옛글 풀이) -->
+      <!-- ============================================== -->
+      <section id="tab-camera" class="tab-pane">
         <div class="tab-banner">
-          <span class="banner-badge">AI 비전 해독</span>
-          <h2 class="tab-title">옛글 촬영 및 AI 강독</h2>
-          <p class="tab-desc">고문서, 시험 지문, 훈민정음 활자를 카메라로 비추면 현대어로 낱낱이 풀이합니다.</p>
+          <span class="banner-badge">스마트 카메라</span>
+          <h2 class="tab-title">AI 옛글 풀이 & 강독</h2>
+          <p class="tab-desc">고문서, 교재, 문제지의 옛글을 카메라로 비추거나 사진을 올려 AI 훈장의 1:1 풀이를 받아보세요.</p>
         </div>
 
-        <!-- 카메라 뷰파인더 & 프리뷰 카드 -->
-        <div class="card camera-interactive-card">
-          <!-- 숨겨진 파일 인풋 -->
-          <input type="file" id="cameraFileInput" accept="image/*" style="display: none;">
-          
-          <!-- 뷰파인더 스크린 영역 -->
-          <div class="viewfinder-screen" id="cameraViewfinder">
-            <!-- 1. 실시간 비디오 피드 -->
-            <video id="cameraVideo" autoplay playsinline muted></video>
+        <!-- 실시간 비디오 / 프리뷰 뷰파인더 뷰 -->
+        <div class="camera-viewfinder-card" id="cameraViewfinder">
+          <!-- 웹캠 실시간 비디오 스트림 -->
+          <video id="cameraVideo" class="camera-video-feed" playsinline autoplay muted></video>
 
-            <!-- 2. 스냅샷 캔버스 (내부 처리용) -->
-            <canvas id="captureCanvas" style="display: none;"></canvas>
+          <!-- 사진 캡처를 위한 숨김 캔버스 -->
+          <canvas id="captureCanvas" style="display: none;"></canvas>
 
-            <!-- 3. 촬영/업로드 결과 미리보기 이미지 -->
-            <img id="previewImage" alt="촬영/업로드 미리보기" style="display: none;">
+          <!-- 촬영 또는 업로드된 정적 이미지 프리뷰 -->
+          <img id="previewImage" class="camera-preview-img" alt="옛글 미리보기" style="display: none;">
 
-            <!-- 4. 전통 한지 격자 & 스캔 가이드 오버레이 -->
-            <div class="camera-scan-overlay" id="cameraScanOverlay">
-              <div class="scan-frame-corner top-left"></div>
-              <div class="scan-frame-corner top-right"></div>
-              <div class="scan-frame-corner bottom-left"></div>
-              <div class="scan-frame-corner bottom-right"></div>
-              <div class="scan-crosshair"></div>
-              <span class="scan-guide-text">문서 또는 시험 지문을 사각 틀 안에 맞춰주세요</span>
-            </div>
-
-            <!-- 5. 카메라 권한 거부 또는 미지원 시 대체 화면 -->
-            <div class="camera-fallback-box" id="cameraFallbackBox" style="display: none;">
-              <span class="fallback-icon">📷</span>
-              <p class="fallback-title">카메라가 연결되지 않았습니다</p>
-              <p class="fallback-msg" id="cameraFallbackMsg">권한을 허용하시거나 아래 [사진 파일 올리기]를 눌러 고전문서 이미지를 선택해 주세요.</p>
-              <button type="button" class="btn btn-secondary btn-sm" id="btnStartCameraStream" style="margin-top: 8px;">카메라 다시 연결 시도</button>
-            </div>
+          <!-- 전통 서당 뷰파인더 스캔 오버레이 가이드 -->
+          <div class="scan-overlay-frame" id="cameraScanOverlay">
+            <span class="scan-frame-corner top-left"></span>
+            <span class="scan-frame-corner top-right"></span>
+            <span class="scan-frame-corner bottom-left"></span>
+            <span class="scan-frame-corner bottom-right"></span>
+            <div class="scan-crosshair"></div>
+            <div class="scan-guide-text">옛글을 사각형 틀 안에 맞추어 촬영하세요</div>
           </div>
 
-          <!-- 컨트롤 버튼 영역 (촬영 전 vs 촬영 후) -->
-          <div class="camera-controls-wrapper">
-            <!-- 촬영 전 버튼 그룹 -->
-            <div class="camera-btn-group" id="controlsPreCapture">
-              <button type="button" class="btn btn-secondary" id="btnUploadFile">📁 사진 파일 올리기</button>
-              <button type="button" class="btn btn-primary" id="btnCaptureShutter">📷 찰칵 촬영하기</button>
-            </div>
-
-            <!-- 촬영 후 버튼 그룹 -->
-            <div class="camera-btn-group post-capture" id="controlsPostCapture" style="display: none;">
-              <button type="button" class="btn btn-secondary" id="btnRetake">🔄 다시 찍기</button>
-              <button type="button" class="btn btn-primary" id="btnSolveAI">✨ AI 옛글 풀이하기</button>
-            </div>
+          <!-- 카메라 미지원 / 권한 거부 시 대체 화면 -->
+          <div class="camera-fallback-box" id="cameraFallbackBox" style="display: none;">
+            <span class="fallback-icon">📷</span>
+            <h3 class="fallback-title">카메라 접근 안내</h3>
+            <p class="fallback-msg" id="cameraFallbackMsg">카메라를 켜거나 아래 [사진 파일 올리기]로 고문서 이미지를 선택해 주세요.</p>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnStartCameraStream">카메라 다시 연결 시도</button>
           </div>
         </div>
 
-        <!-- AI 로딩 스피너 카드 (1.5초 분석 시뮬레이션) -->
+        <!-- 숨김 파일 인풋 -->
+        <input type="file" id="cameraFileInput" accept="image/*" style="display: none;">
+
+        <!-- 카메라 제어 버튼 그룹 -->
+        <div class="camera-controls-wrapper">
+          <!-- 1) 촬영 전 버튼 모드 -->
+          <div class="camera-btn-group pre-capture" id="controlsPreCapture">
+            <button type="button" class="btn btn-primary btn-camera" id="btnCaptureShutter">
+              <span>📸</span> 찰칵 촬영하기
+            </button>
+            <button type="button" class="btn btn-secondary btn-camera" id="btnUploadFile">
+              <span>📁</span> 사진 파일 올리기
+            </button>
+          </div>
+
+          <!-- 2) 촬영/업로드 후 액션 버튼 모드 -->
+          <div class="camera-btn-group post-capture" id="controlsPostCapture" style="display: none;">
+            <button type="button" class="btn btn-secondary" id="btnRetake">
+              <span>🔄</span> 다시 찍기
+            </button>
+            <button type="button" class="btn btn-primary" id="btnSolveAI">
+              <span>✨</span> AI 옛글 풀이하기
+            </button>
+          </div>
+        </div>
+
+        <!-- AI 분석 중 로딩 스피너 카드 -->
         <div class="card ai-loading-card" id="aiLoadingCard" style="display: none;">
-          <div class="tradition-spinner">
-            <span class="spinner-core">書</span>
-          </div>
-          <h3 class="loading-title">AI 훈장이 옛글을 해독하는 중입니다...</h3>
-          <p class="loading-desc">초정밀 고전문학 엔진이 고어 활자와 형태소를 1:1로 풀이하고 있습니다.</p>
+          <div class="spinner-ink"></div>
+          <h4 class="loading-title">서당 AI 훈장 강독 중...</h4>
+          <p class="loading-sub">옛글의 ㆍ(아래아)와 형태소를 분해하고 1:1 현대어 대역을 작성하고 있습니다.</p>
         </div>
 
-        <!-- AI 분석 상세 결과 카드 (2-2단계 신규) -->
+        <!-- AI 풀이 결과 카드 컨테이너 -->
         <div class="ai-result-container" id="aiResultContainer" style="display: none;">
-          
-          <!-- 작품 개요 헤더 카드 -->
-          <div class="card result-header-card">
+          <div class="card result-meta-card">
             <div class="result-badge-row">
-              <span class="result-badge" id="resultEraBadge">조선 전기 (1446년)</span>
-              <span class="result-author" id="resultAuthor">세종대왕</span>
+              <span class="era-badge" id="resultEraBadge">조선 전기 (1446년)</span>
+              <span class="author-tag" id="resultAuthor">세종대왕</span>
             </div>
-            <h3 class="result-title" id="resultTitle">훈민정음 언해본 서문</h3>
+            <h3 class="result-work-title" id="resultTitle">훈민정음 언해본 서문</h3>
           </div>
 
-          <!-- 원문 및 형태소 단어 클릭 영역 -->
-          <div class="card result-original-card">
-            <div class="card-header-line">
-              <h4 class="section-title">📜 고어 원문 강독</h4>
-              <span class="hint-pulse">💡 단어 클릭 시 뜻 풀이 & 단어장 저장</span>
+          <!-- 원문 및 현대어 대역 카드 -->
+          <div class="card translation-card">
+            <h4 class="sub-section-title">고어 원문</h4>
+            <div class="quote-box original-box">
+              <p class="quote-text old-hangul" id="resultOriginalText"></p>
             </div>
-            <p class="result-original-text old-hangul" id="resultOriginalText"></p>
-            
-            <!-- 주요 형태소 단어 칩 리스트 -->
-            <div class="morpheme-chips-section">
-              <h5 class="chips-title">🔍 핵심 고어 형태소 풀이 (클릭하여 단어장에 저장)</h5>
-              <div class="morpheme-chips-grid" id="morphemeChipsGrid">
-                <!-- 자바스크립트로 동적 렌더링 -->
+
+            <h4 class="sub-section-title" style="margin-top: 14px;">현대어 1:1 대역 풀이</h4>
+            <div class="quote-box modern-box">
+              <p class="quote-text" id="resultModernText"></p>
+            </div>
+          </div>
+
+          <!-- 형태소 분석 및 단어장 저장 칩 -->
+          <div class="card morphemes-card">
+            <div class="morpheme-header">
+              <h4 class="sub-section-title">형태소별 어휘 풀이</h4>
+              <span class="morpheme-tip">★ 단어를 누르면 풀이를 보고 내 단어장에 저장할 수 있습니다.</span>
+            </div>
+            <div class="morpheme-chips-grid" id="morphemeChipsGrid">
+              <!-- 자바스크립트로 동적 렌더링 -->
+            </div>
+          </div>
+
+          <!-- 문학적 해설 카드 -->
+          <div class="card commentary-card">
+            <h4 class="sub-section-title">작품 배경 및 해설</h4>
+            <p class="commentary-text" id="resultCommentaryText"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- [탭 4] 게임 화면 (10초 타임어택 퀴즈 대전) - 3-1단계 -->
+      <!-- ============================================== -->
+      <section id="tab-game" class="tab-pane">
+        <div class="tab-banner">
+          <span class="banner-badge">게이미피케이션</span>
+          <h2 class="tab-title">10초 타임어택 퀴즈 대전</h2>
+          <p class="tab-desc">가상 서당 AI 학우와 실시간 스피드 퀴즈로 겨루고, 경험치를 쌓아 레벨업과 전통 배지를 쟁취하세요!</p>
+        </div>
+
+        <!-- 1) 퀴즈 로비 화면 -->
+        <div id="quizLobbyView" class="quiz-lobby-view">
+          <div class="card tier-banner-card">
+            <div class="tier-mark">王</div>
+            <div class="tier-details">
+              <span class="tier-tag">현재 나의 등급</span>
+              <strong class="tier-title">서당 상급 선비 (LEVEL 7)</strong>
+              <span class="tier-progress-text">승리 보너스 +100 XP / 정답당 +50 XP</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="section-title">대결 규칙 안내</h3>
+            <ul class="rule-list">
+              <li>⏱️ <strong>문항당 10초 제한시간:</strong> 빠르게 정답을 맞혀야 가상 학우를 앞설 수 있습니다.</li>
+              <li>🤖 <strong>가상 AI 봇 실시간 대결:</strong> AI 학우의 실시간 점수 게이지와 경쟁합니다.</li>
+              <li>📝 <strong>오답노트 자동 적립:</strong> 틀리거나 시간 초과된 문제는 MY [34 오답노트]로 자동 저장됩니다.</li>
+              <li>🏆 <strong>배지 & 레벨업:</strong> 첫 승리 시 [王] (게임 왕) 배지가 해금되며, 2,000 XP 달성 시 레벨업됩니다.</li>
+            </ul>
+            <button type="button" class="btn btn-primary btn-game-start" id="btnStartQuizBattle">
+              ⚔️ 10초 타임어택 퀴즈 대전 시작
+            </button>
+          </div>
+        </div>
+
+        <!-- 2) 실시간 퀴즈 배틀 아레나 화면 -->
+        <div id="quizArenaView" class="quiz-arena-wrap" style="display: none;">
+          <!-- 버서스 상태 헤더 -->
+          <div class="battle-versus-header">
+            <!-- 유저 -->
+            <div class="combatant user">
+              <div class="combatant-avatar">我</div>
+              <div class="combatant-info">
+                <span class="combatant-name" id="quizUserAvatarName">선비</span>
+                <span class="combatant-score" id="quizUserScoreText">0점</span>
+                <div class="score-track">
+                  <div class="score-fill" id="quizUserScoreBar"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 중앙 VS 배지 & 문항수 -->
+            <div class="versus-center-badge">
+              <span class="vs-icon">VS</span>
+              <span class="round-indicator" id="quizRoundIndicator">제 1 / 5 문</span>
+            </div>
+
+            <!-- 가상 AI 봇 -->
+            <div class="combatant bot">
+              <div class="combatant-avatar">友</div>
+              <div class="combatant-info">
+                <span class="combatant-name">김선비(AI)</span>
+                <span class="combatant-score" id="quizBotScoreText">0점</span>
+                <div class="score-track">
+                  <div class="score-fill" id="quizBotScoreBar"></div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- 현대어 1:1 대역 풀이 카드 -->
-          <div class="card result-modern-card">
-            <h4 class="section-title">📖 현대어 대역 풀이</h4>
-            <p class="result-modern-text" id="resultModernText"></p>
+          <!-- 10초 타이머 컨테이너 -->
+          <div class="quiz-timer-wrap">
+            <div class="quiz-timer-meta">
+              <span class="timer-label">남은 시간</span>
+              <span class="timer-counter" id="quizTimerCountText">10.0초</span>
+            </div>
+            <div class="quiz-timer-track">
+              <div class="quiz-timer-fill" id="quizTimerBar" style="width: 100%;"></div>
+            </div>
           </div>
 
-          <!-- 문학적 배경지식 카드 -->
-          <div class="card result-commentary-card">
-            <h4 class="section-title">🏛️ 훈장의 문학적 배경지식 강독</h4>
-            <p class="result-commentary-text" id="resultCommentaryText"></p>
+          <!-- 문제 카드 -->
+          <div class="quiz-question-box">
+            <div class="quiz-meta-row">
+              <span class="quiz-cat-tag" id="quizCategoryBadge">옛말</span>
+              <span class="quiz-source-tag" id="quizSourceText">[훈민정음 언해본]</span>
+            </div>
+            <h3 class="quiz-question-text old-hangul" id="quizQuestionText">질문 로딩 중...</h3>
           </div>
 
-        </div>
+          <!-- 4지선다 선택지 버튼 그리드 -->
+          <div class="quiz-choices-grid" id="quizChoicesGrid">
+            <!-- 자바스크립트로 동적 렌더링 -->
+          </div>
 
-        <!-- AI 해독 예시 정보 카드 -->
-        <div class="card info-guide-card" id="cameraInfoGuideCard">
-          <h4 class="section-title">✨ 고어 특수 활자 완벽 지원</h4>
-          <p class="info-guide-text">
-            ㆍ(아래아), ㅿ(반시옷), ㆆ(여린히읗), ᄠ(어두자음군) 등의 고어 표기가 원문 그대로 보존되며,
-            형태소 단위로 현대어 번역 및 문법 해설 툴팁이 제공됩니다.
-          </p>
+          <!-- 실시간 정답/오답 피드백 알림 배너 -->
+          <div class="quiz-feedback-alert" id="quizFeedbackAlert"></div>
         </div>
       </section>
 
-
-      <!-- ======================================================
-           ④ [게임] 탭: 10초 타임어택 퀴즈 대결
-           ====================================================== -->
-      <section class="tab-pane" id="tab-game" data-tab="game">
-        <div class="tab-banner">
-          <span class="banner-badge">장원급제 도전</span>
-          <h2 class="tab-title">10초 타임어택 퀴즈 대결</h2>
-          <p class="tab-desc">인공지능 유생 봇과 실시간 스피드 대결을 펼치고 과거 시험에 급제하세요.</p>
-        </div>
-
-        <!-- 신분 티어 안내 카드 -->
-        <div class="card tier-banner-card">
-          <div class="tier-mark">進士</div>
-          <div class="tier-details">
-            <span class="tier-tag">현재 신분</span>
-            <h3 class="tier-title">진사 (進士 · 3급)</h3>
-            <p class="tier-progress-text">다음 등급 [급제]까지 3승 남음</p>
-          </div>
-        </div>
-
-        <!-- 퀴즈 대전 규칙 & 매칭 카드 -->
-        <div class="card game-match-card">
-          <h4 class="section-title">⚔️ 대결 규칙 안내</h4>
-          <ul class="rule-list">
-            <li><strong>1게임 5문항:</strong> 고어 어휘 뜻 맞히기 및 원문 빈칸 채우기</li>
-            <li><strong>문항당 10초 제한:</strong> 남은 시간에 비례하여 스피드 추가 점수</li>
-            <li><strong>틀린 문제 자동 수집:</strong> 오답은 MY [34 오답노트]에 즉시 적립</li>
-          </ul>
-
-          <button class="btn btn-primary btn-block btn-game-start" disabled>
-            ⚔️ AI 유생 봇과 빠른 매칭 시작 (3단계 연동)
-          </button>
-        </div>
-      </section>
-
-
-      <!-- ======================================================
-           ⑤ [MY] 탭: 마이페이지 허브 및 5대 서브 화면 컨테이너
-           ====================================================== -->
-      <section class="tab-pane" id="tab-my" data-tab="my">
-        
-        <!-- MY 허브 프로필 헤더 카드 -->
+      <!-- ============================================== -->
+      <!-- [탭 5] MY 마이페이지 (5대 서브 뷰) -->
+      <!-- ============================================== -->
+      <section id="tab-my" class="tab-pane">
+        <!-- MY 프로필 헤더 카드 -->
         <div class="my-profile-header">
           <div class="my-avatar" id="myAvatarText">선비</div>
           <div class="my-profile-info">
@@ -419,585 +453,443 @@
           </div>
         </div>
 
-        <!-- MY 5대 서브 뷰 전환 탭 스위처 -->
-        <nav class="my-sub-nav" aria-label="마이페이지 서브 메뉴">
-          <button class="my-sub-btn active" data-sub="sub-vocab">33 단어장</button>
-          <button class="my-sub-btn" data-sub="sub-wrong">34 오답노트</button>
-          <button class="my-sub-btn" data-sub="sub-stats">35 통계</button>
-          <button class="my-sub-btn" data-sub="sub-badges">36 배지·XP</button>
-          <button class="my-sub-btn" data-sub="sub-settings">37 설정</button>
-        </nav>
+        <!-- MY 5대 서브 화면 전환 탭 스위처 -->
+        <div class="my-sub-nav">
+          <button type="button" class="my-sub-btn active" data-sub="sub-vocab">33 내 단어장</button>
+          <button type="button" class="my-sub-btn" data-sub="sub-wrong">34 오답노트</button>
+          <button type="button" class="my-sub-btn" data-sub="sub-stats">35 학습 통계</button>
+          <button type="button" class="my-sub-btn" data-sub="sub-badges">36 배지·경험치</button>
+          <button type="button" class="my-sub-btn" data-sub="sub-settings">37 환경설정</button>
+        </div>
 
-        <!-- ----------------------------------------------------
-             [33 내 단어장] 서브 화면
-             ---------------------------------------------------- -->
-        <div class="my-sub-view active" id="sub-vocab">
-          <!-- 실시간 검색창 -->
+        <!-- 33 내 단어장 서브 뷰 -->
+        <div id="sub-vocab" class="my-sub-view active">
           <div class="search-bar-wrap">
             <span class="search-icon">🔍</span>
-            <input type="text" class="search-input" placeholder="단어, 한자, 뜻, 출처 검색..." readonly>
+            <input type="text" class="search-input" placeholder="단어, 한자, 뜻 검색...">
           </div>
-
-          <!-- 카테고리 필터 칩 -->
           <div class="filter-chips-row">
-            <button class="chip active">전체</button>
-            <button class="chip">옛말</button>
-            <button class="chip">한자어</button>
-            <button class="chip">사자성어</button>
+            <button type="button" class="chip active">전체</button>
+            <button type="button" class="chip">옛말</button>
+            <button type="button" class="chip">한자어</button>
+            <button type="button" class="chip">사자성어</button>
           </div>
-
-          <!-- 저장 개수 인디케이터 -->
-          <div class="vocab-count-indicator">
-            저장한 단어 <strong>4</strong>개
-          </div>
-
-          <!-- 단어 카드 리스트 -->
+          <div class="vocab-count-indicator">저장한 단어 <strong>4</strong>개</div>
           <div class="vocab-list">
-            <!-- 단어 1 -->
-            <div class="vocab-card">
-              <div class="vocab-main">
-                <div class="vocab-word-row">
-                  <h4 class="vocab-word old-hangul">사맛다</h4>
-                  <span class="vocab-cat-badge">옛말</span>
-                </div>
-                <p class="vocab-meaning">서로 통하다, 뜻이 통하다</p>
-                <span class="vocab-source">출전: 훈민정음 언해본</span>
-              </div>
-              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
-            </div>
-
-            <!-- 단어 2 -->
-            <div class="vocab-card">
-              <div class="vocab-main">
-                <div class="vocab-word-row">
-                  <h4 class="vocab-word">문해력 <span class="hanja">(文解力)</span></h4>
-                  <span class="vocab-cat-badge">한자어</span>
-                </div>
-                <p class="vocab-meaning">글을 읽고 이해하는 능력</p>
-                <span class="vocab-source">출전: 수능·내신 필수어휘</span>
-              </div>
-              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
-            </div>
-
-            <!-- 단어 3 -->
-            <div class="vocab-card">
-              <div class="vocab-main">
-                <div class="vocab-word-row">
-                  <h4 class="vocab-word">각골난망 <span class="hanja">(刻骨難忘)</span></h4>
-                  <span class="vocab-cat-badge">사자성어</span>
-                </div>
-                <p class="vocab-meaning">은혜를 뼈에 새겨 잊지 못함</p>
-                <span class="vocab-source">출전: 필수 사자성어</span>
-              </div>
-              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
-            </div>
-
-            <!-- 단어 4 -->
-            <div class="vocab-card">
-              <div class="vocab-main">
-                <div class="vocab-word-row">
-                  <h4 class="vocab-word old-hangul">벗</h4>
-                  <span class="vocab-cat-badge">옛말</span>
-                </div>
-                <p class="vocab-meaning">친구 또는 가까운 사이</p>
-                <span class="vocab-source">출전: 고전시가</span>
-              </div>
-              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
-            </div>
+            <!-- 자바스크립트로 동적 렌더링 -->
           </div>
         </div>
 
-        <!-- ----------------------------------------------------
-             [34 오답노트] 서브 화면
-             ---------------------------------------------------- -->
-        <div class="my-sub-view" id="sub-wrong">
-          <!-- 상단 대형 요약 카드 (다크그린 테마) -->
+        <!-- 34 오답노트 서브 뷰 -->
+        <div id="sub-wrong" class="my-sub-view">
           <div class="dark-green-card wrong-summary-card">
             <div class="wrong-stat-item">
               <span class="ws-label">이번 주 오답</span>
-              <span class="ws-value">2<small>문제</small></span>
+              <span class="ws-value" id="wrongCountWeekly">2<small>문제</small></span>
             </div>
             <div class="ws-divider"></div>
             <div class="wrong-stat-item">
               <span class="ws-label">복습 완료</span>
-              <span class="ws-value">1<small>문제</small></span>
+              <span class="ws-value" id="wrongCountReviewed">1<small>문제</small></span>
             </div>
           </div>
-
-          <h4 class="sub-section-title">다시 볼 문제</h4>
-
-          <!-- 다시 볼 문제 리스트 -->
-          <div class="wrong-list">
-            <!-- 오답 1 -->
-            <div class="wrong-card">
-              <div class="wrong-info">
-                <h5 class="wrong-question old-hangul">사맛다</h5>
-                <div class="wrong-choice-row">
-                  <span class="choice-wrong">선택: 바라보다</span>
-                  <span class="choice-correct">정답: 서로 통하다</span>
-                </div>
-              </div>
-              <button class="btn btn-review" disabled>복습</button>
-            </div>
-
-            <!-- 오답 2 -->
-            <div class="wrong-card">
-              <div class="wrong-info">
-                <h5 class="wrong-question">각골난망 (刻骨難忘)</h5>
-                <div class="wrong-choice-row">
-                  <span class="choice-wrong">선택: 매우 놀람</span>
-                  <span class="choice-correct">정답: 은혜를 잊지 못함</span>
-                </div>
-              </div>
-              <button class="btn btn-review" disabled>복습</button>
-            </div>
-
-            <!-- 복습 완료된 항목 -->
-            <div class="wrong-card reviewed">
-              <div class="wrong-info">
-                <h5 class="wrong-question">문해력 (文解力)</h5>
-                <div class="wrong-choice-row">
-                  <span class="choice-done">✅ 복습 완료 (읽고 이해하는 능력)</span>
-                </div>
-              </div>
-              <span class="badge-done">완료</span>
-            </div>
+          <h3 class="sub-section-title">다시 볼 문제 목록</h3>
+          <div class="wrong-list" id="wrongNotesListContainer">
+            <!-- 자바스크립트로 동적 렌더링 -->
           </div>
         </div>
 
-        <!-- ----------------------------------------------------
-             [35 학습 통계] 서브 화면
-             ---------------------------------------------------- -->
-        <div class="my-sub-view" id="sub-stats">
-          <!-- 연속 학습일 요약 카드 -->
-          <div class="stats-streak-card">
-            <div class="streak-icon-wrap">🔥</div>
-            <div class="streak-text-wrap">
-              <h3 class="streak-days">연속 학습 12일</h3>
-              <p class="streak-sub">이번 주 5일 학습을 완료했습니다.</p>
-            </div>
+        <!-- 35 학습 통계 서브 뷰 -->
+        <div id="sub-stats" class="my-sub-view">
+          <div class="card">
+            <h3 class="sub-section-title">연속 학습 일수</h3>
+            <p class="stats-streak-desc">연속 <strong id="statStreakDays" style="color: var(--color-seal); font-size: 18px;">1일</strong> 동안 하루도 거르지 않고 옛글을 탐구하셨습니다. (이번 주 <span id="statWeekStudyDays" style="font-weight: 700; color: var(--color-dark-green);">1일</span> 학습)</p>
           </div>
 
-          <!-- 주간 학습 시간 CSS 막대 그래프 -->
           <div class="card chart-card">
-            <h4 class="section-title">주간 학습 시간 (분)</h4>
-            <div class="bar-chart-container">
-              <!-- 월: 20분 -->
-              <div class="chart-col">
-                <span class="bar-val">20</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="height: 33%;"></div>
-                </div>
-                <span class="bar-day">월</span>
-              </div>
-              <!-- 화: 35분 -->
-              <div class="chart-col">
-                <span class="bar-val">35</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="height: 58%;"></div>
-                </div>
-                <span class="bar-day">화</span>
-              </div>
-              <!-- 수: 40분 -->
-              <div class="chart-col">
-                <span class="bar-val">40</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="height: 66%;"></div>
-                </div>
-                <span class="bar-day">수</span>
-              </div>
-              <!-- 목: 50분 -->
-              <div class="chart-col">
-                <span class="bar-val">50</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="height: 83%;"></div>
-                </div>
-                <span class="bar-day">목</span>
-              </div>
-              <!-- 금: 30분 -->
-              <div class="chart-col">
-                <span class="bar-val">30</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="height: 50%;"></div>
-                </div>
-                <span class="bar-day">금</span>
-              </div>
-              <!-- 토: 60분 (최고치) -->
-              <div class="chart-col highlight-col">
-                <span class="bar-val">60</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="height: 100%;"></div>
-                </div>
-                <span class="bar-day">토</span>
-              </div>
-              <!-- 일: 25분 -->
-              <div class="chart-col">
-                <span class="bar-val">25</span>
-                <div class="bar-track">
-                  <div class="bar-fill" style="height: 41%;"></div>
-                </div>
-                <span class="bar-day">일</span>
-              </div>
+            <h3 class="sub-section-title">주간 학습 시간 (분)</h3>
+            <div class="bar-chart-container" id="statsWeeklyBarChart">
+              <!-- js/stats.js에서 7일간 동적 렌더링 -->
             </div>
           </div>
 
-          <!-- 정답률 및 어휘수 지표 카드 2열 -->
           <div class="stats-twin-grid">
             <div class="twin-box">
-              <span class="tb-title">정답률</span>
-              <span class="tb-val" id="myStatsAccuracy">82%</span>
+              <span class="tb-title">누적 정답률</span>
+              <strong class="tb-val" id="myStatsAccuracy">82%</strong>
               <span class="tb-sub">전체 퀴즈 게임</span>
             </div>
             <div class="twin-box">
               <span class="tb-title">학습한 어휘</span>
-              <span class="tb-val" id="myStatsLearnedWords">47개</span>
-              <span class="tb-sub">누적 마스터 어휘</span>
+              <strong class="tb-val" id="myStatsLearnedWords">47개</strong>
+              <span class="tb-sub">플래시카드 마스터</span>
             </div>
           </div>
         </div>
 
-        <!-- ----------------------------------------------------
-             [36 배지·경험치] 서브 화면
-             ---------------------------------------------------- -->
-        <div class="my-sub-view" id="sub-badges">
-          <!-- 상단 레벨 & XP 카드 (다크 그린 배경) -->
-          <div class="dark-green-card level-card">
-            <div class="level-top-row">
-              <div class="level-badge-pill">LEVEL 7</div>
-              <span class="level-title">한글 탐험가</span>
+        <!-- 36 배지·경험치 서브 뷰 -->
+        <div id="sub-badges" class="my-sub-view">
+          <div class="dark-green-card level-banner-card">
+            <div class="level-meta-row">
+              <span class="level-badge-tag">현재 등급</span>
+              <strong class="level-title-text" id="badgeLevelTitle">LEVEL 7 한글 탐험가</strong>
             </div>
-            <div class="xp-progress-wrap">
+            <div class="xp-progress-bar-wrap">
               <div class="xp-text-row">
-                <span>경험치 (XP)</span>
-                <strong>1,240 / 2,000 XP</strong>
+                <span>경험치(XP)</span>
+                <strong id="badgeXpRatio">1,240 / 2,000 XP</strong>
               </div>
               <div class="xp-track">
-                <div class="xp-bar" style="width: 62%;"></div>
+                <div class="xp-fill" id="badgeXpBar" style="width: 62%;"></div>
               </div>
             </div>
           </div>
 
-          <h4 class="sub-section-title">획득한 배지</h4>
-
-          <!-- 2x3 배지 그리드 -->
-          <div class="badge-grid">
-            <!-- [文] 첫 번역 (획득) -->
-            <div class="badge-item unlocked">
-              <div class="badge-circle">文</div>
-              <span class="badge-name">첫 번역</span>
-              <span class="badge-status">획득 완료</span>
-            </div>
-
-            <!-- [七] 7일 연속 (획득) -->
-            <div class="badge-item unlocked">
-              <div class="badge-circle">七</div>
-              <span class="badge-name">7일 연속</span>
-              <span class="badge-status">획득 완료</span>
-            </div>
-
-            <!-- [字] 어휘 수집가 (획득) -->
-            <div class="badge-item unlocked">
-              <div class="badge-circle">字</div>
-              <span class="badge-name">어휘 수집가</span>
-              <span class="badge-status">획득 완료</span>
-            </div>
-
-            <!-- [王] 게임 왕 (미획득) -->
-            <div class="badge-item locked">
-              <div class="badge-circle">🔒</div>
-              <span class="badge-name">게임 왕</span>
-              <span class="badge-status">퀴즈 10승 달성</span>
-            </div>
-
-            <!-- [古] 고전 박사 (미획득) -->
-            <div class="badge-item locked">
-              <div class="badge-circle">🔒</div>
-              <span class="badge-name">고전 박사</span>
-              <span class="badge-status">어휘 50개 마스터</span>
-            </div>
-
-            <!-- [復] 완벽 복습 (미획득) -->
-            <div class="badge-item locked">
-              <div class="badge-circle">🔒</div>
-              <span class="badge-name">완벽 복습</span>
-              <span class="badge-status">오답 10개 복습</span>
-            </div>
+          <h3 class="sub-section-title">획득한 서당 배지</h3>
+          <div class="badge-grid" id="badgeGrid2x3">
+            <!-- js/badges.js에서 2x3 동적 렌더링 -->
           </div>
         </div>
 
-        <!-- ----------------------------------------------------
-             [37 환경설정] 서브 화면
-             ---------------------------------------------------- -->
-        <div class="my-sub-view" id="sub-settings">
-          <!-- 계정 섹션 -->
+        <!-- 37 환경설정 서브 뷰 -->
+        <div id="sub-settings" class="my-sub-view">
           <div class="settings-group">
-            <h4 class="settings-group-title">계정</h4>
-            <div class="settings-item clickable" id="settingProfileBtn" title="클릭하여 프로필 수정">
-              <span class="s-label">프로필</span>
-              <span class="s-val"><strong id="settingProfileVal">선비 · 중학교 2학년</strong> <span>&gt;</span></span>
+            <h4 class="settings-group-title">계정 및 프로필</h4>
+            <div class="settings-item" id="settingProfileBtn" style="cursor: pointer;">
+              <span class="s-label">사용자명 · 학년</span>
+              <strong class="s-val" id="settingProfileVal">선비 · 중학교 2학년 ›</strong>
             </div>
-            <div class="settings-item clickable" id="settingGoalBtn" title="클릭하여 학습 목표 수정">
-              <span class="s-label">학습 목표</span>
-              <span class="s-val"><strong id="settingGoalVal">고전 독해 · 한자어</strong> <span>&gt;</span></span>
+            <div class="settings-item" id="settingGoalBtn" style="cursor: pointer;">
+              <span class="s-label">주요 학습 목표</span>
+              <strong class="s-val" id="settingGoalVal">고전 독해 · 한자어 ›</strong>
             </div>
           </div>
 
-          <!-- 학습 설정 섹션 -->
           <div class="settings-group">
             <h4 class="settings-group-title">학습 설정</h4>
             <div class="settings-item">
-              <span class="s-label">학습 알림</span>
-              <div class="toggle-mock active">
+              <span class="s-label">일일 학습 알림</span>
+              <div class="toggle-mock active" id="settingAlarmToggle">
                 <div class="toggle-handle"></div>
               </div>
             </div>
             <div class="settings-item">
-              <span class="s-label">알림 시간</span>
-              <span class="s-val">매일 오후 8:00 <span>&gt;</span></span>
-            </div>
-            <div class="settings-item">
               <span class="s-label">문제 난이도</span>
-              <span class="s-val">보통 <span>&gt;</span></span>
+              <select id="settingDifficultySelect" class="setting-select-box">
+                <option value="쉬움">쉬움</option>
+                <option value="보통" selected>보통</option>
+                <option value="어려움">어려움</option>
+              </select>
             </div>
             <div class="settings-item col-item">
               <span class="s-label">글자 크기</span>
               <div class="font-size-selector">
-                <button class="font-btn">작게</button>
-                <button class="font-btn active">기본</button>
-                <button class="font-btn">크게</button>
+                <button type="button" class="font-btn" data-size="작게">작게</button>
+                <button type="button" class="font-btn active" data-size="기본">기본</button>
+                <button type="button" class="font-btn" data-size="크게">크게</button>
               </div>
             </div>
-            <div class="settings-item">
-              <span class="s-label">일일 학습 문제 수</span>
-              <span class="s-val">10문제 <span>&gt;</span></span>
+            <div class="settings-item col-item">
+              <div style="display: flex; justify-content: space-between; width: 100%;">
+                <span class="s-label">일일 학습 문제 수</span>
+                <span class="slider-val-badge" id="settingDailyValText">10문제</span>
+              </div>
+              <div class="setting-slider-wrap">
+                <input type="range" id="settingDailySlider" class="setting-range-input" min="5" max="20" step="5" value="10">
+              </div>
             </div>
           </div>
 
-          <!-- 데이터 백업 & 관리 섹션 -->
           <div class="settings-group">
-            <h4 class="settings-group-title">데이터 관리 및 백업</h4>
+            <h4 class="settings-group-title">데이터 백업 & 관리</h4>
             <div class="backup-btn-grid">
-              <button class="btn btn-secondary" disabled>📤 JSON 백업 파일 내보내기</button>
-              <button class="btn btn-secondary" disabled>📥 JSON 백업 파일 가져오기</button>
+              <button type="button" class="btn btn-secondary" id="btnExportJSON">
+                📥 JSON 내보내기
+              </button>
+              <button type="button" class="btn btn-secondary" id="btnImportJSON">
+                📤 JSON 가져오기
+              </button>
             </div>
-            <button class="btn btn-danger-link" id="settingResetBtn">데이터 초기화 (입학 온보딩 리셋)</button>
+            <input type="file" id="importJsonFileInput" accept=".json" style="display: none;">
+            <button type="button" class="btn-danger-link" id="settingResetBtn">
+              ⚠️ 학습 데이터 초기화 및 입학 리셋
+            </button>
           </div>
         </div>
-
       </section>
 
     </main>
 
-    <!-- ========================================================
-         하단 고정 네비게이션 바 (5개 메인 탭)
-         ======================================================== -->
-    <nav class="bottom-nav" aria-label="메인 네비게이션">
-      <!-- 1. 홈 -->
-      <button class="nav-item active" data-target="tab-home" aria-label="홈">
+    <!-- 3. 하단 5대 탭 고정 네비게이션 바 -->
+    <nav class="bottom-nav">
+      <button type="button" class="nav-item active" data-target="tab-home">
         <span class="nav-icon">🏠</span>
         <span class="nav-label">홈</span>
       </button>
-
-      <!-- 2. 학습 -->
-      <button class="nav-item" data-target="tab-study" aria-label="문학 및 어휘 학습">
+      <button type="button" class="nav-item" data-target="tab-study">
         <span class="nav-icon">📖</span>
         <span class="nav-label">학습</span>
       </button>
-
-      <!-- 3. 촬영 -->
-      <button class="nav-item" data-target="tab-camera" aria-label="옛글 촬영 및 AI 해독">
+      <button type="button" class="nav-item" data-target="tab-camera">
         <span class="nav-icon">📷</span>
         <span class="nav-label">촬영</span>
       </button>
-
-      <!-- 4. 게임 -->
-      <button class="nav-item" data-target="tab-game" aria-label="10초 타임어택 퀴즈">
+      <button type="button" class="nav-item" data-target="tab-game">
         <span class="nav-icon">⚔️</span>
         <span class="nav-label">게임</span>
       </button>
-
-      <!-- 5. MY -->
-      <button class="nav-item" data-target="tab-my" aria-label="마이페이지">
+      <button type="button" class="nav-item" data-target="tab-my">
         <span class="nav-icon">👤</span>
         <span class="nav-label">MY</span>
       </button>
     </nav>
 
-    <!-- ========================================================
-         입학 온보딩 3단계 마법사 모달 (1-3단계)
-         ======================================================== -->
-    <div class="modal-overlay" id="onboardingModal" style="display: none;">
-      <div class="onboarding-card">
-        
-        <!-- 모달 헤더 -->
-        <div class="onboarding-header">
-          <span class="onboarding-seal">入學</span>
-          <h3 class="onboarding-title">애국 서당 입학 등록</h3>
-          <p class="onboarding-sub">유생의 배움 길을 바르게 돕기 위해 기본 정보를 설정합니다.</p>
-          
-          <!-- 3단계 스텝 인디케이터 -->
-          <div class="step-indicator">
-            <div class="step-dot active" id="stepDot1">
-              <span class="step-num">1</span>
-              <span class="step-label">신분/학년</span>
-            </div>
-            <div class="step-line" id="stepLine1"></div>
-            <div class="step-dot" id="stepDot2">
-              <span class="step-num">2</span>
-              <span class="step-label">학습 목표</span>
-            </div>
-            <div class="step-line" id="stepLine2"></div>
-            <div class="step-dot" id="stepDot3">
-              <span class="step-num">3</span>
-              <span class="step-label">닉네임</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 1단계: 학년/신분 선택 -->
-        <div class="onboarding-step active" id="onboardingStep1">
-          <h4 class="step-question">현재 어떤 과정을 공부하고 계신가요?</h4>
-          <div class="option-grid">
-            <label class="option-card active">
-              <input type="radio" name="userGrade" value="중학생" checked>
-              <span class="opt-icon">🎒</span>
-              <div class="opt-text">
-                <strong>중학생</strong>
-                <span>교과서 필수 고전 기초 & 한자어</span>
-              </div>
-            </label>
-            <label class="option-card">
-              <input type="radio" name="userGrade" value="고등학생">
-              <span class="opt-icon">📚</span>
-              <div class="opt-text">
-                <strong>고등학생</strong>
-                <span>내신 고전시가 & 수능 기출 완성</span>
-              </div>
-            </label>
-            <label class="option-card">
-              <input type="radio" name="userGrade" value="수험생/일반인">
-              <span class="opt-icon">📜</span>
-              <div class="opt-text">
-                <strong>수험생 · 일반 유생</strong>
-                <span>공무원 국어 & 교양 옛글 독해</span>
-              </div>
-            </label>
-          </div>
-          <div class="modal-actions single">
-            <button type="button" class="btn btn-primary btn-block" id="btnNextStep1">다음 단계로 (1/3)</button>
-          </div>
-        </div>
-
-        <!-- 2단계: 주 학습 목표 선택 -->
-        <div class="onboarding-step" id="onboardingStep2">
-          <h4 class="step-question">집중하고 싶은 학습 목표를 골라주세요</h4>
-          <div class="option-grid">
-            <label class="option-card active">
-              <input type="radio" name="userGoal" value="고전 독해 · 한자어" checked>
-              <span class="opt-icon">🎯</span>
-              <div class="opt-text">
-                <strong>고전 독해 · 한자어</strong>
-                <span>필수 어휘와 문해력 집중 마스터</span>
-              </div>
-            </label>
-            <label class="option-card">
-              <input type="radio" name="userGoal" value="수능 고전시가 정복">
-              <span class="opt-icon">🦅</span>
-              <div class="opt-text">
-                <strong>수능 고전시가 정복</strong>
-                <span>관동별곡 등 주요 가사·시조 독파</span>
-              </div>
-            </label>
-            <label class="option-card">
-              <input type="radio" name="userGoal" value="공무원 · 한능검 국어">
-              <span class="opt-icon">🏛️</span>
-              <div class="opt-text">
-                <strong>공무원 · 한능검 국어</strong>
-                <span>고전문법, 형태소 및 기출 사자성어</span>
-              </div>
-            </label>
-            <label class="option-card">
-              <input type="radio" name="userGoal" value="교양 옛글 강독">
-              <span class="opt-icon">🍃</span>
-              <div class="opt-text">
-                <strong>교양 옛글 강독</strong>
-                <span>훈민정음 원문과 옛 선비의 문장 감상</span>
-              </div>
-            </label>
-          </div>
-          <div class="modal-actions">
-            <button type="button" class="btn btn-secondary" id="btnPrevStep2">이전</button>
-            <button type="button" class="btn btn-primary" id="btnNextStep2">다음 단계로 (2/3)</button>
-          </div>
-        </div>
-
-        <!-- 3단계: 닉네임 입력 & 일일 문제 수 -->
-        <div class="onboarding-step" id="onboardingStep3">
-          <h4 class="step-question">서당에서 불릴 닉네임을 정해주세요</h4>
-          <div class="input-form-group">
-            <label for="onboardingNickname" class="form-label">호(號) 또는 닉네임</label>
-            <input type="text" id="onboardingNickname" class="form-input" placeholder="예: 율곡, 선비, 다산 (2~8자)" maxlength="8" value="선비">
-            <span class="input-tip" id="nicknameErrorTip">서당 학적부와 대결 화면에 표시됩니다. (2~8자)</span>
-          </div>
-
-          <div class="input-form-group" style="margin-top: 14px;">
-            <label class="form-label">하루 목표 퀴즈 풀이량</label>
-            <div class="daily-target-chips">
-              <label class="target-chip"><input type="radio" name="userDailyQuestions" value="5"><span>5문제</span></label>
-              <label class="target-chip active"><input type="radio" name="userDailyQuestions" value="10" checked><span>10문제</span></label>
-              <label class="target-chip"><input type="radio" name="userDailyQuestions" value="15"><span>15문제</span></label>
-              <label class="target-chip"><input type="radio" name="userDailyQuestions" value="20"><span>20문제</span></label>
-            </div>
-          </div>
-
-          <div class="modal-actions">
-            <button type="button" class="btn btn-secondary" id="btnPrevStep3">이전</button>
-            <button type="button" class="btn btn-primary" id="btnCompleteOnboarding">🎉 서당 입학 완료</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- 형태소 상세 해설 & 단어장 저장 툴팁 모달 (2-2단계) -->
-    <div class="morpheme-modal-overlay" id="morphemeModalOverlay" style="display: none;">
-      <div class="morpheme-tooltip-card">
-        <button type="button" class="btn-close-tooltip" id="btnCloseMorphemeTooltip" aria-label="닫기">✕</button>
-        <div class="tooltip-header">
-          <span class="tooltip-cat-badge" id="tooltipCatBadge">옛말</span>
-          <h4 class="tooltip-word old-hangul" id="tooltipWord">ᄉᆞᄆᆞᆺ디</h4>
-          <span class="tooltip-hanja" id="tooltipHanja"></span>
-        </div>
-        <div class="tooltip-body">
-          <p class="tooltip-meaning" id="tooltipMeaning">서로 통하다, 사무치다</p>
-          <div class="tooltip-grammar-box">
-            <span class="grammar-label">문법 팁</span>
-            <p class="grammar-text" id="tooltipGrammar"></p>
-          </div>
-          <span class="tooltip-source" id="tooltipSource">출전: 훈민정음 언해본</span>
-        </div>
-        <div class="tooltip-footer">
-          <button type="button" class="btn btn-primary btn-block btn-save-vocab" id="btnSaveToMyVocab">
-            ★ 내 단어장에 저장
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 전통 서당 테마 토스트 알림 컴포넌트 -->
-    <div class="seodang-toast" id="seodangToast" style="display: none;">
-      <span class="toast-icon">📜</span>
-      <span class="toast-message" id="toastMessage">내 단어장에 저장되었습니다!</span>
-    </div>
-
   </div>
 
-  <!-- 자바스크립트 모듈 연동 -->
+  <!-- ============================================== -->
+  <!-- 4. 글로벌 모달 & 토스트 오버레이 레이어 -->
+  <!-- ============================================== -->
+
+  <!-- 1) 3단계 서당 입학 온보딩 모달 (1-3단계) -->
+  <div class="onboarding-modal-overlay" id="onboardingModal" style="display: none;">
+    <div class="onboarding-card">
+      <div class="onboarding-header">
+        <span class="onboarding-seal">入學</span>
+        <h2 class="onboarding-main-title">서당 입학을 환영합니다</h2>
+        <p class="onboarding-sub-title">당신에게 꼭 맞춘 고전 국어 강독 과정을 구성합니다.</p>
+        <div class="onboarding-stepper">
+          <span class="step-dot active" id="stepDot1">1</span>
+          <span class="step-line" id="stepLine1"></span>
+          <span class="step-dot" id="stepDot2">2</span>
+          <span class="step-line" id="stepLine2"></span>
+          <span class="step-dot" id="stepDot3">3</span>
+        </div>
+      </div>
+
+      <!-- 1단계: 학년/신분 선택 -->
+      <div class="onboarding-step-content active" id="onboardingStep1">
+        <h3 class="step-question">학습자의 학년 또는 구분을 선택해 주세요</h3>
+        <div class="option-card-group">
+          <label class="option-card active">
+            <input type="radio" name="userGrade" value="중학생" checked>
+            <div class="opt-text">
+              <strong>중학생</strong>
+              <span>기초 한자어 및 교과서 고전시가 입문</span>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="userGrade" value="고등학생">
+            <div class="opt-text">
+              <strong>고등학생</strong>
+              <span>수능 필수 고전문학 및 모의고사 대비</span>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="userGrade" value="수험생/일반인">
+            <div class="opt-text">
+              <strong>수험생 / 일반 성인</strong>
+              <span>공무원 국어, 한문 교양 및 문해력 증진</span>
+            </div>
+          </label>
+        </div>
+        <button type="button" class="btn btn-primary btn-onboard-next" id="btnNextStep1">다음 단계 (1/3) ›</button>
+      </div>
+
+      <!-- 2단계: 학습 목표 선택 -->
+      <div class="onboarding-step-content" id="onboardingStep2">
+        <h3 class="step-question">가장 집중하고 싶은 학습 목표는 무엇인가요?</h3>
+        <div class="option-card-group">
+          <label class="option-card active">
+            <input type="radio" name="userGoal" value="고전 독해 · 한자어" checked>
+            <div class="opt-text">
+              <strong>고전 독해 · 한자어 집중</strong>
+              <span>중세국어 문법과 형태소 1:1 대역 마스터</span>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="userGoal" value="수능 고전시가">
+            <div class="opt-text">
+              <strong>수능 필수 고전시가</strong>
+              <span>관동별곡, 사미인곡 등 기출 핵심 분석</span>
+            </div>
+          </label>
+          <label class="option-card">
+            <input type="radio" name="userGoal" value="교양 옛글">
+            <div class="opt-text">
+              <strong>교양 옛글 & 사자성어</strong>
+              <span>선조들의 지혜가 담긴 명문장 탐구</span>
+            </div>
+          </label>
+        </div>
+        <div class="onboard-btn-dual">
+          <button type="button" class="btn btn-secondary" id="btnPrevStep2">‹ 이전</button>
+          <button type="button" class="btn btn-primary" id="btnNextStep2">다음 단계 (2/3) ›</button>
+        </div>
+      </div>
+
+      <!-- 3단계: 닉네임 및 일일 문제수 -->
+      <div class="onboarding-step-content" id="onboardingStep3">
+        <h3 class="step-question">서당에서 불릴 선비님의 호(닉네임)를 입력해 주세요</h3>
+        <div class="input-form-wrap">
+          <input type="text" class="nickname-input" id="onboardingNickname" placeholder="예: 율곡, 송강, 선비..." maxlength="8" value="선비">
+          <p class="input-tip" id="nicknameErrorTip">2자 이상 8자 이내로 입력해 주세요.</p>
+        </div>
+        <h3 class="step-question" style="margin-top: 14px;">하루 학습할 퀴즈 목표 문항 수</h3>
+        <div class="daily-target-chips">
+          <label class="target-chip"><input type="radio" name="userDailyQuestions" value="5"><span>5문제</span></label>
+          <label class="target-chip active"><input type="radio" name="userDailyQuestions" value="10" checked><span>10문제 (추천)</span></label>
+          <label class="target-chip"><input type="radio" name="userDailyQuestions" value="20"><span>20문제</span></label>
+        </div>
+        <div class="onboard-btn-dual" style="margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" id="btnPrevStep3">‹ 이전</button>
+          <button type="button" class="btn btn-primary" id="btnCompleteOnboarding">서당 입학 완료! 🎓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2) 형태소 상세 해설 툴팁 모달 (2-2단계) -->
+  <div class="morpheme-modal-overlay" id="morphemeModalOverlay" style="display: none;">
+    <div class="morpheme-tooltip-card">
+      <button type="button" class="btn-close-tooltip" id="btnCloseMorphemeTooltip" aria-label="닫기">✕</button>
+      <div class="tooltip-header">
+        <span class="tooltip-cat-badge" id="tooltipCatBadge">옛말</span>
+        <h3 class="tooltip-word old-hangul">
+          <span id="tooltipWord">ᄉᆞᄆᆞᆺ디</span>
+          <small id="tooltipHanja" class="tooltip-hanja"></small>
+        </h3>
+      </div>
+      <p class="tooltip-meaning" id="tooltipMeaning">서로 통하다, 사무치다</p>
+      <div class="tooltip-grammar-box">
+        <strong class="grammar-label">형태소 & 문법 해설</strong>
+        <p class="grammar-text" id="tooltipGrammar">동사 "ᄉᆞᄆᆞᆺ다"의 부정 연결어미형. [통하지 아니하므로]로 해석합니다.</p>
+      </div>
+      <span class="tooltip-source" id="tooltipSource">출전: 훈민정음 언해본</span>
+      <button type="button" class="btn btn-primary btn-save-vocab" id="btnSaveToMyVocab">
+        ★ 내 단어장에 저장
+      </button>
+    </div>
+  </div>
+
+  <!-- 3) 10초 타임어택 퀴즈 대전 결과 모달 (3-1단계) -->
+  <div class="quiz-result-modal-overlay" id="quizResultModal" style="display: none;">
+    <div class="quiz-result-card">
+      <div class="result-badge-seal">結</div>
+      <h3 class="result-title" id="quizResultTitle">대결 완료!</h3>
+      <p class="result-subtitle" id="quizResultSubtitle">가상 서당 학우와의 10초 타임어택 대결 결과입니다.</p>
+
+      <!-- 스코어보드 -->
+      <div class="result-scoreboard">
+        <div class="res-score-col">
+          <span>나의 점수</span>
+          <strong id="quizResultUserScore">0점</strong>
+        </div>
+        <div class="res-vs-line">VS</div>
+        <div class="res-score-col bot">
+          <span>AI 학우</span>
+          <strong id="quizResultBotScore">0점</strong>
+        </div>
+      </div>
+
+      <!-- 획득 보상 & 알림 영역 -->
+      <div class="result-rewards-box">
+        <div class="result-xp-chip" id="quizResultXpBadge">+0 XP 획득!</div>
+        <div class="result-notice-pill wrong-note" id="quizWrongNoteNotice" style="display: none;"></div>
+        <div class="result-notice-pill levelup" id="quizLevelUpNotice" style="display: none;"></div>
+        <div class="result-notice-pill badge" id="quizBadgeUnlockNotice" style="display: none;"></div>
+      </div>
+
+      <!-- 액션 버튼 -->
+      <div class="result-btn-row">
+        <button type="button" class="btn btn-secondary" id="btnQuizGoWrongNotes">오답노트 가기</button>
+        <button type="button" class="btn btn-primary" id="btnQuizRestart">한 판 더 하기 ⚔️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4) 전통 서당 테마 토스트 알림 -->
+  <div class="seodang-toast" id="seodangToast" style="display: none;">
+    <span class="toast-icon">📜</span>
+    <span id="toastMessage">안내 메시지</span>
+  </div>
+
+  <!-- 5) 1문항 즉석 복습 퀴즈 모달 (34 오답노트 연동) -->
+  <div class="review-quiz-modal-overlay" id="wrongReviewModal" style="display: none;">
+    <div class="review-quiz-card">
+      <div class="review-modal-header">
+        <span class="review-badge-tag">즉석 오답 복습</span>
+        <button type="button" class="btn-modal-close" id="btnReviewModalClose">✕</button>
+      </div>
+      <h3 class="review-question-text old-hangul" id="reviewModalQuestion">질문 로딩 중...</h3>
+      <div class="quiz-choices-grid" id="reviewModalChoices">
+        <!-- js/wrong-notes.js에서 동적 렌더링 -->
+      </div>
+      <div class="quiz-feedback-alert" id="reviewModalFeedback" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- 6) 배지 상세 설명 모달 (36 배지·경험치 연동) -->
+  <div class="badge-detail-modal-overlay" id="badgeDetailModal" style="display: none;">
+    <div class="badge-detail-card">
+      <div class="badge-modal-seal" id="badgeModalSeal">文</div>
+      <h3 class="badge-modal-name" id="badgeModalName">[文] 첫 번역</h3>
+      <p class="badge-modal-desc" id="badgeModalDesc">첫 번역 완료</p>
+      <div class="badge-criteria-box">
+        <strong style="color: var(--color-ink-deep); display: block; margin-bottom: 2px;">해금 조건</strong>
+        <p id="badgeModalCriteria">고문서 사진을 촬영하여 AI 옛글 첫 번역 풀이를 완료하면 수여됩니다.</p>
+      </div>
+      <span class="badge-status-tag tag-unlocked" id="badgeModalStatusTag">🏆 획득 완료</span>
+      <button type="button" class="btn btn-secondary" id="btnBadgeModalClose" style="width: 100%;">닫기</button>
+    </div>
+  </div>
+
+  <!-- 7) 프로필 & 학습 목표 수정 모달 (37 환경설정 연동) -->
+  <div class="profile-edit-modal-overlay" id="profileEditModal" style="display: none;">
+    <div class="profile-edit-card">
+      <h3 class="edit-modal-title">프로필 & 학습 목표 수정</h3>
+      <p class="edit-modal-sub">호(닉네임), 학년 및 주요 학습 과정을 변경합니다.</p>
+      <div class="edit-form-group">
+        <label for="editModalNickname">호 (닉네임)</label>
+        <input type="text" id="editModalNickname" class="edit-form-input" maxlength="8">
+      </div>
+      <div class="edit-form-group">
+        <label for="editModalGrade">학년 / 구분</label>
+        <select id="editModalGrade" class="edit-form-select">
+          <option value="중학생">중학생 (기초 한자어/고전 입문)</option>
+          <option value="고등학생">고등학생 (수능 필수 고전문학)</option>
+          <option value="수험생/일반인">수험생/일반인 (공무원/한문 교양)</option>
+        </select>
+      </div>
+      <div class="edit-form-group">
+        <label for="editModalGoal">주요 학습 목표</label>
+        <select id="editModalGoal" class="edit-form-select">
+          <option value="고전 독해 · 한자어">고전 독해 · 한자어 집중</option>
+          <option value="수능 고전시가">수능 필수 고전시가</option>
+          <option value="교양 옛글">교양 옛글 & 사자성어</option>
+        </select>
+      </div>
+      <div class="edit-modal-btn-row">
+        <button type="button" class="btn btn-secondary" id="btnCloseProfileEdit">취소</button>
+        <button type="button" class="btn btn-primary" id="btnSaveProfileEdit">저장 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- 5. 애플리케이션 스크립트 연동 (순서 엄수) -->
+  <!-- ============================================== -->
   <script src="js/storage.js"></script>
-  <script src="js/vocab-data.js"></script>
-  <script src="js/vocab.js"></script>
   <script src="js/ai-service.js"></script>
   <script src="js/camera.js"></script>
+  <script src="js/vocab-data.js"></script>
+  <script src="js/vocab.js"></script>
+  <script src="js/quiz-engine.js"></script>
+  <script src="js/my-vocab.js"></script>
+  <script src="js/wrong-notes.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/badges.js"></script>
+  <script src="js/settings.js"></script>
   <script src="js/app.js"></script>
+
 </body>
 </html>
