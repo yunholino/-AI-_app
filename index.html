@@ -108,15 +108,15 @@
           <h4 class="section-title">📊 나의 학습 현황</h4>
           <div class="summary-stat-row">
             <div class="summary-stat-box">
-              <span class="num">12일</span>
+              <span class="num" id="homeSummaryStreak">12일</span>
               <span class="lbl">연속 학습</span>
             </div>
             <div class="summary-stat-box">
-              <span class="num">47개</span>
+              <span class="num" id="homeSummaryLearnedWords">47개</span>
               <span class="lbl">외운 단어</span>
             </div>
             <div class="summary-stat-box">
-              <span class="num">82%</span>
+              <span class="num" id="homeSummaryAccuracy">82%</span>
               <span class="lbl">퀴즈 정답률</span>
             </div>
           </div>
@@ -125,49 +125,120 @@
 
 
       <!-- ======================================================
-           ② [학습] 탭: 고전문학 대역 뷰어 및 플래시카드
+           ② [학습] 탭: 고전문학 대역 뷰어 및 3D 플래시카드 (2-3단계)
            ====================================================== -->
       <section class="tab-pane" id="tab-study" data-tab="study">
         <div class="tab-banner">
           <span class="banner-badge">문학 & 어휘 강독</span>
           <h2 class="tab-title">고전문학 대역 & 암기</h2>
-          <p class="tab-desc">원문과 현대어를 1:1로 비교하고 3D 플래시카드로 필수 고어를 체득합니다.</p>
+          <p class="tab-desc">원문과 현대어를 1:1로 비교하고 3D 입체 플래시카드로 필수 고어를 체득합니다.</p>
         </div>
 
-        <!-- 서브 모드 전환 스위치 -->
+        <!-- 서브 모드 전환 스위치 (플래시카드 ↔ 대역 뷰어) -->
         <div class="sub-segmented-control">
-          <button class="seg-btn active">🎴 3D 플래시카드</button>
-          <button class="seg-btn">📜 문학 1:1 대역 뷰어</button>
+          <button type="button" class="seg-btn active" id="segBtnFlashcard">🎴 3D 플래시카드</button>
+          <button type="button" class="seg-btn" id="segBtnParallel">📜 문학 1:1 대역 뷰어</button>
         </div>
 
-        <!-- 3D 플래시카드 미리보기 영역 -->
-        <div class="card flashcard-container">
-          <div class="card-3d-mock">
-            <div class="card-front">
-              <span class="card-category-tag">필수 고어 #01</span>
-              <h3 class="card-main-word old-hangul">어엿브다</h3>
-              <p class="card-sample-sentence old-hangul">"내 이를 <u>어엿비</u> 너겨 새로 스믈여듧 字ᄅᆞᆯ ᄆᆡᆼᄀᆞ노니"</p>
-              <div class="card-hint">💡 카드를 누르면 뜻이 뒤집힙니다</div>
+        <!-- 1. [플래시카드 학습장] 섹션 -->
+        <div class="study-sub-section" id="studyFlashcardSection">
+          
+          <!-- 카드 진행률 프로그레스 바 -->
+          <div class="card-progress-wrapper">
+            <span class="card-progress-text" id="cardProgressText">어휘 1 / 16</span>
+            <div class="card-progress-track">
+              <div class="card-progress-bar" id="cardProgressBar" style="width: 0%;"></div>
             </div>
           </div>
+
+          <!-- 3D 회전 플래시카드 씬 -->
+          <div class="flashcard-3d-scene" id="flashcardScene">
+            <div class="flashcard-3d-card" id="flashcardCard">
+              
+              <!-- 카드 앞면 (고어 표제어 & 원문 예문) -->
+              <div class="card-face card-face-front">
+                <div class="face-top-row">
+                  <span class="card-category-badge" id="cardCategoryBadge">옛말 #01</span>
+                  <span class="card-hint-badge">💡 클릭하여 뒤집기</span>
+                </div>
+                <div class="face-center">
+                  <h3 class="card-main-word old-hangul" id="cardMainWord">ᄉᆞᄆᆞᆺ디</h3>
+                </div>
+                <div class="face-bottom">
+                  <span class="face-label">원문 예문</span>
+                  <p class="card-sample-sentence old-hangul" id="cardExampleOriginal">
+                    "나랏말ᄊᆞ미 中國에 달아 文字와로 서르 ᄉᆞᄆᆞᆺ디 아니ᄒᆞᆯᄊᆡ"
+                  </p>
+                </div>
+              </div>
+
+              <!-- 카드 뒷면 (현대어 풀이 & 한자 & 문법 팁) -->
+              <div class="card-face card-face-back">
+                <div class="face-top-row">
+                  <span class="card-category-badge back-badge">현대어 풀이</span>
+                  <span class="card-hanja-text" id="cardBackHanja"></span>
+                </div>
+                <div class="face-center">
+                  <h4 class="card-back-meaning" id="cardBackMeaning">서로 통하다, 사무치다</h4>
+                  <div class="card-grammar-box">
+                    <span class="grammar-tag">문법 팁</span>
+                    <p class="grammar-desc" id="cardBackGrammar">동사 "ᄉᆞᄆᆞᆺ다"의 활용형</p>
+                  </div>
+                </div>
+                <div class="face-bottom">
+                  <span class="face-label">현대어 풀이 예문</span>
+                  <p class="card-sample-sentence" id="cardExampleModern">
+                    "우리나라의 말이 중국과 달라 한자와는 서로 통하지 아니하므로"
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 플래시카드 하단 학습 액션 버튼 (다시 볼래요 vs 외웠어요) -->
           <div class="flashcard-actions">
-            <button class="btn btn-secondary" disabled>🔄 다시 볼래요</button>
-            <button class="btn btn-primary" disabled>✅ 외웠어요</button>
+            <button type="button" class="btn btn-secondary btn-card-action" id="btnVocabAgain">
+              🔄 다시 볼래요
+            </button>
+            <button type="button" class="btn btn-primary btn-card-action" id="btnVocabMaster">
+              ✅ 외웠어요 (+1)
+            </button>
+          </div>
+
+          <!-- 전체 어휘 학습 완료 화면 -->
+          <div class="card flashcard-complete-box" id="flashcardCompleteBox" style="display: none;">
+            <div class="complete-seal-badge">完</div>
+            <h3 class="complete-title">필수 고어 16선 학습 완료!</h3>
+            <p class="complete-desc">오늘의 고전문학 필수 어휘를 모두 마스터하셨습니다. MY 학습 통계에 학습한 어휘 수가 누적 반영되었습니다.</p>
+            <button type="button" class="btn btn-secondary btn-block" id="btnRestartCards">
+              🔄 처음부터 다시 학습하기
+            </button>
+          </div>
+
+        </div>
+
+        <!-- 2. [고전문학 1:1 대역 뷰어] 섹션 -->
+        <div class="study-sub-section" id="studyParallelSection" style="display: none;">
+          <!-- 작품 선택 칩 스위처 -->
+          <div class="lit-selector-row">
+            <button type="button" class="chip lit-selector-btn active" data-lit="0">정철 〈관동별곡〉</button>
+            <button type="button" class="chip lit-selector-btn" data-lit="1">월명사 〈제망매가〉</button>
+          </div>
+
+          <!-- 작품 타이틀 카드 -->
+          <div class="card lit-header-card">
+            <span class="card-pill">1:1 원문 대역 읽기</span>
+            <h4 class="lit-current-title" id="litCurrentTitle">정철 〈관동별곡〉 기경</h4>
+            <p class="lit-guide-text">원문 행과 현대어 풀이 행을 나란히 비교하며 읽는 고전문학 대역 뷰어입니다.</p>
+          </div>
+
+          <!-- 1:1 대역 리스트 렌더링 컨테이너 -->
+          <div class="parallel-grid-container" id="parallelGridContainer">
+            <!-- 자바스크립트로 1:1 대역 행 동적 렌더링 -->
           </div>
         </div>
 
-        <!-- 대역 뷰어 미리보기 카드 -->
-        <div class="card parallel-preview-card">
-          <h4 class="section-title">📖 〈관동별곡〉 대역 뷰어 미리보기</h4>
-          <div class="parallel-row">
-            <div class="parallel-original old-hangul">江강湖호애 病병이 깁퍼 竹듁林님의 누엇더니</div>
-            <div class="parallel-translation">자연을 사랑하는 병이 깊어 담양 창평에서 은거하고 있었더니</div>
-          </div>
-          <div class="parallel-row">
-            <div class="parallel-original old-hangul">關관東동 八팔百ᄇᆡᆨ里리의 方방面면을 맛디시니</div>
-            <div class="parallel-translation">강원도 팔백 리의 관찰사 직분을 맡겨 주시니</div>
-          </div>
-        </div>
       </section>
 
 
@@ -574,12 +645,12 @@
           <div class="stats-twin-grid">
             <div class="twin-box">
               <span class="tb-title">정답률</span>
-              <span class="tb-val">82%</span>
+              <span class="tb-val" id="myStatsAccuracy">82%</span>
               <span class="tb-sub">전체 퀴즈 게임</span>
             </div>
             <div class="twin-box">
               <span class="tb-title">학습한 어휘</span>
-              <span class="tb-val">47개</span>
+              <span class="tb-val" id="myStatsLearnedWords">47개</span>
               <span class="tb-sub">누적 마스터 어휘</span>
             </div>
           </div>
@@ -923,6 +994,8 @@
 
   <!-- 자바스크립트 모듈 연동 -->
   <script src="js/storage.js"></script>
+  <script src="js/vocab-data.js"></script>
+  <script src="js/vocab.js"></script>
   <script src="js/ai-service.js"></script>
   <script src="js/camera.js"></script>
   <script src="js/app.js"></script>

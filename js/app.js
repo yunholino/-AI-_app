@@ -219,6 +219,26 @@
     // 환경설정 탭 반영
     if (elements.settingProfileVal) elements.settingProfileVal.textContent = `${nickname} · ${grade}`;
     if (elements.settingGoalVal) elements.settingGoalVal.textContent = goal;
+
+    // 홈 탭 및 MY 통계 지표 실시간 동기화
+    const stats = window.SeodangStorage.get('stats') || {};
+    const learnedWords = stats.learnedWordsCount !== undefined ? stats.learnedWordsCount : 47;
+    const accuracy = stats.totalAccuracy !== undefined ? stats.totalAccuracy : 82;
+
+    const homeStreak = document.getElementById('homeSummaryStreak');
+    if (homeStreak) homeStreak.textContent = `${streak}일`;
+
+    const homeWords = document.getElementById('homeSummaryLearnedWords');
+    if (homeWords) homeWords.textContent = `${learnedWords}개`;
+
+    const homeAcc = document.getElementById('homeSummaryAccuracy');
+    if (homeAcc) homeAcc.textContent = `${accuracy}%`;
+
+    const myAcc = document.getElementById('myStatsAccuracy');
+    if (myAcc) myAcc.textContent = `${accuracy}%`;
+
+    const myWords = document.getElementById('myStatsLearnedWords');
+    if (myWords) myWords.textContent = `${learnedWords}개`;
   }
 
   /**
