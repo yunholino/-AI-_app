@@ -232,8 +232,60 @@
           </div>
         </div>
 
+        <!-- AI 로딩 스피너 카드 (1.5초 분석 시뮬레이션) -->
+        <div class="card ai-loading-card" id="aiLoadingCard" style="display: none;">
+          <div class="tradition-spinner">
+            <span class="spinner-core">書</span>
+          </div>
+          <h3 class="loading-title">AI 훈장이 옛글을 해독하는 중입니다...</h3>
+          <p class="loading-desc">초정밀 고전문학 엔진이 고어 활자와 형태소를 1:1로 풀이하고 있습니다.</p>
+        </div>
+
+        <!-- AI 분석 상세 결과 카드 (2-2단계 신규) -->
+        <div class="ai-result-container" id="aiResultContainer" style="display: none;">
+          
+          <!-- 작품 개요 헤더 카드 -->
+          <div class="card result-header-card">
+            <div class="result-badge-row">
+              <span class="result-badge" id="resultEraBadge">조선 전기 (1446년)</span>
+              <span class="result-author" id="resultAuthor">세종대왕</span>
+            </div>
+            <h3 class="result-title" id="resultTitle">훈민정음 언해본 서문</h3>
+          </div>
+
+          <!-- 원문 및 형태소 단어 클릭 영역 -->
+          <div class="card result-original-card">
+            <div class="card-header-line">
+              <h4 class="section-title">📜 고어 원문 강독</h4>
+              <span class="hint-pulse">💡 단어 클릭 시 뜻 풀이 & 단어장 저장</span>
+            </div>
+            <p class="result-original-text old-hangul" id="resultOriginalText"></p>
+            
+            <!-- 주요 형태소 단어 칩 리스트 -->
+            <div class="morpheme-chips-section">
+              <h5 class="chips-title">🔍 핵심 고어 형태소 풀이 (클릭하여 단어장에 저장)</h5>
+              <div class="morpheme-chips-grid" id="morphemeChipsGrid">
+                <!-- 자바스크립트로 동적 렌더링 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 현대어 1:1 대역 풀이 카드 -->
+          <div class="card result-modern-card">
+            <h4 class="section-title">📖 현대어 대역 풀이</h4>
+            <p class="result-modern-text" id="resultModernText"></p>
+          </div>
+
+          <!-- 문학적 배경지식 카드 -->
+          <div class="card result-commentary-card">
+            <h4 class="section-title">🏛️ 훈장의 문학적 배경지식 강독</h4>
+            <p class="result-commentary-text" id="resultCommentaryText"></p>
+          </div>
+
+        </div>
+
         <!-- AI 해독 예시 정보 카드 -->
-        <div class="card info-guide-card">
+        <div class="card info-guide-card" id="cameraInfoGuideCard">
           <h4 class="section-title">✨ 고어 특수 활자 완벽 지원</h4>
           <p class="info-guide-text">
             ㆍ(아래아), ㅿ(반시옷), ㆆ(여린히읗), ᄠ(어두자음군) 등의 고어 표기가 원문 그대로 보존되며,
@@ -836,10 +888,42 @@
       </div>
     </div>
 
+    <!-- 형태소 상세 해설 & 단어장 저장 툴팁 모달 (2-2단계) -->
+    <div class="morpheme-modal-overlay" id="morphemeModalOverlay" style="display: none;">
+      <div class="morpheme-tooltip-card">
+        <button type="button" class="btn-close-tooltip" id="btnCloseMorphemeTooltip" aria-label="닫기">✕</button>
+        <div class="tooltip-header">
+          <span class="tooltip-cat-badge" id="tooltipCatBadge">옛말</span>
+          <h4 class="tooltip-word old-hangul" id="tooltipWord">ᄉᆞᄆᆞᆺ디</h4>
+          <span class="tooltip-hanja" id="tooltipHanja"></span>
+        </div>
+        <div class="tooltip-body">
+          <p class="tooltip-meaning" id="tooltipMeaning">서로 통하다, 사무치다</p>
+          <div class="tooltip-grammar-box">
+            <span class="grammar-label">문법 팁</span>
+            <p class="grammar-text" id="tooltipGrammar"></p>
+          </div>
+          <span class="tooltip-source" id="tooltipSource">출전: 훈민정음 언해본</span>
+        </div>
+        <div class="tooltip-footer">
+          <button type="button" class="btn btn-primary btn-block btn-save-vocab" id="btnSaveToMyVocab">
+            ★ 내 단어장에 저장
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 전통 서당 테마 토스트 알림 컴포넌트 -->
+    <div class="seodang-toast" id="seodangToast" style="display: none;">
+      <span class="toast-icon">📜</span>
+      <span class="toast-message" id="toastMessage">내 단어장에 저장되었습니다!</span>
+    </div>
+
   </div>
 
   <!-- 자바스크립트 모듈 연동 -->
   <script src="js/storage.js"></script>
+  <script src="js/ai-service.js"></script>
   <script src="js/camera.js"></script>
   <script src="js/app.js"></script>
 </body>

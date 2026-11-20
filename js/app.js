@@ -2,7 +2,7 @@
  * ========================================================
  * 애국 AI (서당 AI) - 메인 애플리케이션 라우터 & 컨트롤러
  * 파일: js/app.js
- * 1-3단계: 온보딩 3단계 마법사 모달 & 출석 스트릭 실시간 연동
+ * 2-2단계: AI 옛글 풀이 파이프라인 & 형태소 툴팁 & '내 단어장' 저장 실시간 연동
  * ========================================================
  */
 
@@ -55,13 +55,49 @@
     nicknameErrorTip: null,
     gradeRadios: null,
     goalRadios: null,
-    dailyQuestionRadios: null
+    dailyQuestionRadios: null,
+
+    // 7. AI 풀이 결과 & 로딩 요소 (2-2단계)
+    aiLoadingCard: null,
+    aiResultContainer: null,
+    resultEraBadge: null,
+    resultAuthor: null,
+    resultTitle: null,
+    resultOriginalText: null,
+    resultModernText: null,
+    resultCommentaryText: null,
+    morphemeChipsGrid: null,
+
+    // 8. 형태소 툴팁 모달 & 토스트 (2-2단계)
+    morphemeModalOverlay: null,
+    btnCloseMorphemeTooltip: null,
+    tooltipCatBadge: null,
+    tooltipWord: null,
+    tooltipHanja: null,
+    tooltipMeaning: null,
+    tooltipGrammar: null,
+    tooltipSource: null,
+    btnSaveToMyVocab: null,
+    seodangToast: null,
+    toastMessage: null,
+
+    // 9. [33 내 단어장] 서브 화면 동적 요소 (2-2단계)
+    vocabSearchInput: null,
+    vocabFilterChips: null,
+    vocabCountIndicator: null,
+    vocabListContainer: null
   };
 
-  /**
-   * 현재 온보딩 단계 (1, 2, 3)
-   */
+  // 현재 온보딩 단계
   let currentOnboardingStep = 1;
+
+  // 현재 툴팁에 띄워진 형태소 데이터 객체
+  let currentActiveMorpheme = null;
+
+  // 단어장 필터링 상태 (카테고리 & 검색어)
+  let vocabCurrentCategory = '전체';
+  let vocabSearchKeyword = '';
+  let toastTimer = null;
 
   /**
    * DOM 요소 캐싱
@@ -124,6 +160,36 @@
     elements.gradeRadios = document.querySelectorAll('input[name="userGrade"]');
     elements.goalRadios = document.querySelectorAll('input[name="userGoal"]');
     elements.dailyQuestionRadios = document.querySelectorAll('input[name="userDailyQuestions"]');
+
+    // AI 풀이 결과 & 로딩
+    elements.aiLoadingCard = document.getElementById('aiLoadingCard');
+    elements.aiResultContainer = document.getElementById('aiResultContainer');
+    elements.resultEraBadge = document.getElementById('resultEraBadge');
+    elements.resultAuthor = document.getElementById('resultAuthor');
+    elements.resultTitle = document.getElementById('resultTitle');
+    elements.resultOriginalText = document.getElementById('resultOriginalText');
+    elements.resultModernText = document.getElementById('resultModernText');
+    elements.resultCommentaryText = document.getElementById('resultCommentaryText');
+    elements.morphemeChipsGrid = document.getElementById('morphemeChipsGrid');
+
+    // 형태소 툴팁 모달 & 토스트
+    elements.morphemeModalOverlay = document.getElementById('morphemeModalOverlay');
+    elements.btnCloseMorphemeTooltip = document.getElementById('btnCloseMorphemeTooltip');
+    elements.tooltipCatBadge = document.getElementById('tooltipCatBadge');
+    elements.tooltipWord = document.getElementById('tooltipWord');
+    elements.tooltipHanja = document.getElementById('tooltipHanja');
+    elements.tooltipMeaning = document.getElementById('tooltipMeaning');
+    elements.tooltipGrammar = document.getElementById('tooltipGrammar');
+    elements.tooltipSource = document.getElementById('tooltipSource');
+    elements.btnSaveToMyVocab = document.getElementById('btnSaveToMyVocab');
+    elements.seodangToast = document.getElementById('seodangToast');
+    elements.toastMessage = document.getElementById('toastMessage');
+
+    // [33 내 단어장] 동적 컨테이너
+    elements.vocabSearchInput = document.querySelector('#sub-vocab .search-input');
+    elements.vocabFilterChips = document.querySelectorAll('#sub-vocab .filter-chips-row .chip');
+    elements.vocabCountIndicator = document.querySelector('#sub-vocab .vocab-count-indicator strong');
+    elements.vocabListContainer = document.querySelector('#sub-vocab .vocab-list');
   }
 
   /**
@@ -139,38 +205,20 @@
     const goal = profile.goal || '고전 독해 · 한자어';
     const streak = profile.streak !== undefined ? profile.streak : 1;
 
-    // 1. 상단 헤더 반영
-    if (elements.headerUserName) {
-      elements.headerUserName.textContent = nickname;
-    }
-    if (elements.headerUserRole) {
-      elements.headerUserRole.textContent = nickname.slice(0, 2);
-    }
-    if (elements.headerStreakCount) {
-      elements.headerStreakCount.textContent = `${streak}일째`;
-    }
+    // 헤더 반영
+    if (elements.headerUserName) elements.headerUserName.textContent = nickname;
+    if (elements.headerUserRole) elements.headerUserRole.textContent = nickname.slice(0, 2);
+    if (elements.headerStreakCount) elements.headerStreakCount.textContent = `${streak}일째`;
 
-    // 2. MY 탭 프로필 카드 반영
-    if (elements.myAvatarText) {
-      elements.myAvatarText.textContent = nickname.slice(0, 2);
-    }
-    if (elements.myProfileUsername) {
-      elements.myProfileUsername.textContent = `${nickname}`;
-    }
-    if (elements.myProfileGrade) {
-      elements.myProfileGrade.textContent = grade;
-    }
-    if (elements.myProfileGoal) {
-      elements.myProfileGoal.textContent = `목표: ${goal}`;
-    }
+    // MY 탭 프로필 카드 반영
+    if (elements.myAvatarText) elements.myAvatarText.textContent = nickname.slice(0, 2);
+    if (elements.myProfileUsername) elements.myProfileUsername.textContent = `${nickname}`;
+    if (elements.myProfileGrade) elements.myProfileGrade.textContent = grade;
+    if (elements.myProfileGoal) elements.myProfileGoal.textContent = `목표: ${goal}`;
 
-    // 3. [37 환경설정] 계정 값 반영
-    if (elements.settingProfileVal) {
-      elements.settingProfileVal.textContent = `${nickname} · ${grade}`;
-    }
-    if (elements.settingGoalVal) {
-      elements.settingGoalVal.textContent = goal;
-    }
+    // 환경설정 탭 반영
+    if (elements.settingProfileVal) elements.settingProfileVal.textContent = `${nickname} · ${grade}`;
+    if (elements.settingGoalVal) elements.settingGoalVal.textContent = goal;
   }
 
   /**
@@ -181,19 +229,11 @@
     if (!targetTabId) return;
 
     elements.tabPanes.forEach(pane => {
-      if (pane.id === targetTabId) {
-        pane.classList.add('active');
-      } else {
-        pane.classList.remove('active');
-      }
+      pane.classList.toggle('active', pane.id === targetTabId);
     });
 
     elements.navItems.forEach(btn => {
-      if (btn.getAttribute('data-target') === targetTabId) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
+      btn.classList.toggle('active', btn.getAttribute('data-target') === targetTabId);
     });
 
     // 카메라 탭 진입 / 이탈 시 미디어 스트림 제어
@@ -221,20 +261,17 @@
     if (!targetSubId) return;
 
     elements.mySubViews.forEach(view => {
-      if (view.id === targetSubId) {
-        view.classList.add('active');
-      } else {
-        view.classList.remove('active');
-      }
+      view.classList.toggle('active', view.id === targetSubId);
     });
 
     elements.mySubBtns.forEach(btn => {
-      if (btn.getAttribute('data-sub') === targetSubId) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
+      btn.classList.toggle('active', btn.getAttribute('data-sub') === targetSubId);
     });
+
+    // 단어장 탭으로 전환 시 리스트 최신 상태 동기화
+    if (targetSubId === 'sub-vocab') {
+      renderMyVocabList();
+    }
   }
 
   /**
@@ -242,35 +279,6 @@
    */
   function openOnboardingModal() {
     if (!elements.onboardingModal) return;
-    
-    // 기존 설정값이 있으면 폼에 기본 채우기
-    const profile = window.SeodangStorage ? window.SeodangStorage.get('profile') : null;
-    if (profile) {
-      if (elements.onboardingNickname && profile.nickname) {
-        elements.onboardingNickname.value = profile.nickname;
-      }
-      if (profile.grade) {
-        elements.gradeRadios.forEach(r => {
-          if (r.value === profile.grade) {
-            r.checked = true;
-            r.closest('.option-card').classList.add('active');
-          } else {
-            r.closest('.option-card').classList.remove('active');
-          }
-        });
-      }
-      if (profile.goal) {
-        elements.goalRadios.forEach(r => {
-          if (r.value === profile.goal) {
-            r.checked = true;
-            r.closest('.option-card').classList.add('active');
-          } else {
-            r.closest('.option-card').classList.remove('active');
-          }
-        });
-      }
-    }
-
     goToOnboardingStep(1);
     elements.onboardingModal.style.display = 'flex';
   }
@@ -284,22 +292,15 @@
   }
 
   /**
-   * 온보딩 특정 스텝으로 전환 (1, 2, 3)
-   * @param {number} stepNumber 
+   * 온보딩 스텝 전환
    */
   function goToOnboardingStep(stepNumber) {
     currentOnboardingStep = stepNumber;
 
-    // 1. 스텝 콘텐츠 전환
     elements.stepContents.forEach((content, index) => {
-      if (index === stepNumber - 1) {
-        content.classList.add('active');
-      } else {
-        content.classList.remove('active');
-      }
+      content.classList.toggle('active', index === stepNumber - 1);
     });
 
-    // 2. 인디케이터 점과 선 상태 업데이트
     elements.stepDots.forEach((dot, index) => {
       if (!dot) return;
       dot.classList.remove('active', 'completed');
@@ -312,21 +313,16 @@
 
     elements.stepLines.forEach((line, index) => {
       if (!line) return;
-      if (index + 1 < stepNumber) {
-        line.classList.add('active');
-      } else {
-        line.classList.remove('active');
-      }
+      line.classList.toggle('active', index + 1 < stepNumber);
     });
 
-    // 3단계 진입 시 닉네임 인풋에 포커스
     if (stepNumber === 3 && elements.onboardingNickname) {
       setTimeout(() => elements.onboardingNickname.focus(), 150);
     }
   }
 
   /**
-   * 옵션 카드 라디오 클릭 스타일 헬퍼
+   * 라디오 옵션 카드 헬퍼
    */
   function setupOptionCards(radioSelector, parentClass) {
     const radios = document.querySelectorAll(radioSelector);
@@ -348,37 +344,24 @@
   function handleCompleteOnboarding() {
     const nicknameInput = elements.onboardingNickname ? elements.onboardingNickname.value.trim() : '';
 
-    // 유효성 검사: 2글자 이상 8글자 이하
     if (!nicknameInput || nicknameInput.length < 2 || nicknameInput.length > 8) {
       if (elements.nicknameErrorTip) {
         elements.nicknameErrorTip.textContent = '⚠️ 닉네임은 공백 없이 2자 이상 8자 이내로 입력해 주세요.';
         elements.nicknameErrorTip.classList.add('error');
       }
-      if (elements.onboardingNickname) {
-        elements.onboardingNickname.focus();
-      }
+      if (elements.onboardingNickname) elements.onboardingNickname.focus();
       return;
     }
 
-    // 선택된 학년
     let selectedGrade = '중학생';
-    elements.gradeRadios.forEach(r => {
-      if (r.checked) selectedGrade = r.value;
-    });
+    elements.gradeRadios.forEach(r => { if (r.checked) selectedGrade = r.value; });
 
-    // 선택된 학습 목표
     let selectedGoal = '고전 독해 · 한자어';
-    elements.goalRadios.forEach(r => {
-      if (r.checked) selectedGoal = r.value;
-    });
+    elements.goalRadios.forEach(r => { if (r.checked) selectedGoal = r.value; });
 
-    // 선택된 일일 문제 수
     let selectedDailyQuestions = 10;
-    elements.dailyQuestionRadios.forEach(r => {
-      if (r.checked) selectedDailyQuestions = r.value;
-    });
+    elements.dailyQuestionRadios.forEach(r => { if (r.checked) selectedDailyQuestions = r.value; });
 
-    // 스토리지에 온보딩 데이터 영속화
     if (window.SeodangStorage) {
       window.SeodangStorage.completeOnboarding({
         nickname: nicknameInput,
@@ -388,39 +371,330 @@
       });
     }
 
-    // 모달 닫기 및 화면 갱신
     closeOnboardingModal();
     renderAllProfileUI();
+  }
+
+  // ========================================================
+  // 2-2단계: AI 옛글 풀이 엔진 및 형태소 툴팁 파이프라인
+  // ========================================================
+
+  /**
+   * 토스트 알림 띄우기
+   * @param {string} msg 
+   */
+  function showToast(msg) {
+    if (!elements.seodangToast || !elements.toastMessage) return;
+    elements.toastMessage.textContent = msg;
+    elements.seodangToast.style.display = 'flex';
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      elements.seodangToast.style.display = 'none';
+    }, 2800);
+  }
+
+  /**
+   * AI 옛글 풀이 요청 핸들러
+   * @param {string} imageDataUrl 
+   */
+  async function handleAITranslationRequest(imageDataUrl) {
+    if (!window.AegukAIService) return;
+
+    // 1. 로딩 스피너 활성화 및 기존 결과창 숨김
+    if (elements.aiLoadingCard) elements.aiLoadingCard.style.display = 'block';
+    if (elements.aiResultContainer) elements.aiResultContainer.style.display = 'none';
+
+    // 뷰파인더 아래로 부드럽게 스크롤 이동
+    if (elements.aiLoadingCard) {
+      elements.aiLoadingCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    try {
+      // 1.5초 분석 시뮬레이션 실행
+      const response = await window.AegukAIService.analyzeOldText(imageDataUrl);
+      const data = response.analysis;
+
+      // 2. 결과 데이터 바인딩
+      if (elements.resultEraBadge) elements.resultEraBadge.textContent = data.era;
+      if (elements.resultAuthor) elements.resultAuthor.textContent = data.author;
+      if (elements.resultTitle) elements.resultTitle.textContent = data.title;
+      if (elements.resultOriginalText) elements.resultOriginalText.textContent = `"${data.originalText}"`;
+      if (elements.resultModernText) elements.resultModernText.textContent = data.modernText;
+      if (elements.resultCommentaryText) elements.resultCommentaryText.textContent = data.commentary;
+
+      // 3. 형태소 칩 동적 생성
+      renderMorphemeChips(data.morphemes);
+
+      // 4. 로딩 종료 후 결과 카드 표시
+      if (elements.aiLoadingCard) elements.aiLoadingCard.style.display = 'none';
+      if (elements.aiResultContainer) {
+        elements.aiResultContainer.style.display = 'flex';
+        elements.aiResultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      showToast(`'${data.title}' 강독 및 풀이가 완료되었습니다.`);
+    } catch (err) {
+      console.error('[AegukApp] AI 풀이 처리 중 오류:', err);
+      if (elements.aiLoadingCard) elements.aiLoadingCard.style.display = 'none';
+      alert('AI 옛글 풀이 도중 오류가 발생했습니다. 다시 시도해 주세요.');
+    }
+  }
+
+  /**
+   * 형태소 단어 칩 리스트 렌더링
+   * @param {Array} morphemes 
+   */
+  function renderMorphemeChips(morphemes) {
+    if (!elements.morphemeChipsGrid) return;
+    elements.morphemeChipsGrid.innerHTML = '';
+
+    morphemes.forEach((item, index) => {
+      const chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'morpheme-chip old-hangul';
+      chip.innerHTML = `<span>${item.word}</span> <span class="chip-star">★</span>`;
+      chip.title = `${item.word} 클릭하여 풀이 보기 및 단어장에 저장`;
+
+      chip.addEventListener('click', function () {
+        openMorphemeTooltip(item);
+      });
+
+      elements.morphemeChipsGrid.appendChild(chip);
+    });
+  }
+
+  /**
+   * 형태소 상세 해설 툴팁 모달 열기
+   * @param {Object} item - { word, hanja, meaning, source, category, grammar }
+   */
+  function openMorphemeTooltip(item) {
+    currentActiveMorpheme = item;
+
+    if (elements.tooltipCatBadge) elements.tooltipCatBadge.textContent = item.category || '옛말';
+    if (elements.tooltipWord) elements.tooltipWord.textContent = item.word;
+    if (elements.tooltipHanja) elements.tooltipHanja.textContent = item.hanja ? `(${item.hanja})` : '';
+    if (elements.tooltipMeaning) elements.tooltipMeaning.textContent = item.meaning;
+    if (elements.tooltipGrammar) elements.tooltipGrammar.textContent = item.grammar || '핵심 문법 사항';
+    if (elements.tooltipSource) elements.tooltipSource.textContent = `출전: ${item.source || '고전문학'}`;
+
+    // 이미 단어장에 저장된 단어인지 확인
+    const myVocabList = window.SeodangStorage ? window.SeodangStorage.get('myVocab') || [] : [];
+    const isAlreadySaved = myVocabList.some(v => v.word === item.word);
+
+    if (elements.btnSaveToMyVocab) {
+      if (isAlreadySaved) {
+        elements.btnSaveToMyVocab.textContent = '✓ 이미 저장된 단어입니다';
+        elements.btnSaveToMyVocab.classList.add('saved');
+        elements.btnSaveToMyVocab.disabled = true;
+      } else {
+        elements.btnSaveToMyVocab.textContent = '★ 내 단어장에 저장';
+        elements.btnSaveToMyVocab.classList.remove('saved');
+        elements.btnSaveToMyVocab.disabled = false;
+      }
+    }
+
+    if (elements.morphemeModalOverlay) {
+      elements.morphemeModalOverlay.style.display = 'flex';
+    }
+  }
+
+  /**
+   * 형태소 툴팁 모달 닫기
+   */
+  function closeMorphemeTooltip() {
+    if (elements.morphemeModalOverlay) {
+      elements.morphemeModalOverlay.style.display = 'none';
+    }
+    currentActiveMorpheme = null;
+  }
+
+  /**
+   * 형태소 단어를 LocalStorage의 'myVocab'에 영속화 저장
+   */
+  function saveCurrentMorphemeToVocab() {
+    if (!currentActiveMorpheme || !window.SeodangStorage) return;
+
+    const myVocab = window.SeodangStorage.get('myVocab') || [];
+    const isExist = myVocab.some(v => v.word === currentActiveMorpheme.word);
+
+    if (isExist) {
+      showToast(`'${currentActiveMorpheme.word}'은(는) 이미 단어장에 저장되어 있습니다.`);
+      return;
+    }
+
+    // 신규 단어 객체 생성
+    const newWordEntry = {
+      id: Date.now(),
+      word: currentActiveMorpheme.word,
+      hanja: currentActiveMorpheme.hanja || '',
+      meaning: currentActiveMorpheme.meaning,
+      source: currentActiveMorpheme.source || 'AI 촬영 풀이',
+      category: currentActiveMorpheme.category || '옛말',
+      isFavorite: true,
+      date: new Date().toISOString().slice(0, 10)
+    };
+
+    // 최신 단어가 맨 위로 오도록 unshift
+    myVocab.unshift(newWordEntry);
+    window.SeodangStorage.set('myVocab', myVocab);
+
+    // 버튼 상태 갱신
+    if (elements.btnSaveToMyVocab) {
+      elements.btnSaveToMyVocab.textContent = '✓ 저장 완료';
+      elements.btnSaveToMyVocab.classList.add('saved');
+      elements.btnSaveToMyVocab.disabled = true;
+    }
+
+    // 토스트 안내 팝업
+    showToast(`'${newWordEntry.word}'이(가) [33 내 단어장]에 저장되었습니다! ★`);
+
+    // 단어장 UI 실시간 리렌더링
+    renderMyVocabList();
+
+    // 0.8초 후 모달 자동 닫기
+    setTimeout(closeMorphemeTooltip, 800);
+  }
+
+  // ========================================================
+  // [33 내 단어장] 실시간 동적 렌더링 & 필터링 모듈
+  // ========================================================
+
+  /**
+   * MY [33 내 단어장] 리스트 실시간 동적 렌더링
+   */
+  function renderMyVocabList() {
+    if (!elements.vocabListContainer || !window.SeodangStorage) return;
+
+    let vocabList = window.SeodangStorage.get('myVocab') || [];
+
+    // 카운트 인디케이터 업데이트
+    if (elements.vocabCountIndicator) {
+      elements.vocabCountIndicator.textContent = vocabList.length;
+    }
+
+    // 1. 카테고리 필터링
+    if (vocabCurrentCategory !== '전체') {
+      vocabList = vocabList.filter(item => item.category === vocabCurrentCategory);
+    }
+
+    // 2. 검색어 필터링
+    if (vocabSearchKeyword.trim() !== '') {
+      const kw = vocabSearchKeyword.trim().toLowerCase();
+      vocabList = vocabList.filter(item =>
+        item.word.toLowerCase().includes(kw) ||
+        (item.hanja && item.hanja.toLowerCase().includes(kw)) ||
+        item.meaning.toLowerCase().includes(kw) ||
+        (item.source && item.source.toLowerCase().includes(kw))
+      );
+    }
+
+    // 리스트 비우기
+    elements.vocabListContainer.innerHTML = '';
+
+    // 빈 결과 안내
+    if (vocabList.length === 0) {
+      elements.vocabListContainer.innerHTML = `
+        <div class="empty-archive-box">
+          <span>조건에 일치하는 단어가 없습니다.</span>
+        </div>
+      `;
+      return;
+    }
+
+    // 단어 카드 아이템 렌더링
+    vocabList.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'vocab-card';
+      card.innerHTML = `
+        <div class="vocab-main">
+          <div class="vocab-word-row">
+            <h4 class="vocab-word old-hangul">${item.word} ${item.hanja ? `<span class="hanja">(${item.hanja})</span>` : ''}</h4>
+            <span class="vocab-cat-badge">${item.category || '옛말'}</span>
+          </div>
+          <p class="vocab-meaning">${item.meaning}</p>
+          <span class="vocab-source">출전: ${item.source || '고전문학'}</span>
+        </div>
+        <button class="fav-star-btn ${item.isFavorite ? 'active' : ''}" aria-label="즐겨찾기">
+          ${item.isFavorite ? '★' : '☆'}
+        </button>
+      `;
+
+      // 즐겨찾기 별 토글 이벤트
+      const starBtn = card.querySelector('.fav-star-btn');
+      starBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        toggleVocabFavorite(item.id);
+      });
+
+      elements.vocabListContainer.appendChild(card);
+    });
+  }
+
+  /**
+   * 단어 즐겨찾기(★) 토글
+   * @param {number} vocabId 
+   */
+  function toggleVocabFavorite(vocabId) {
+    if (!window.SeodangStorage) return;
+    const list = window.SeodangStorage.get('myVocab') || [];
+    const target = list.find(v => v.id === vocabId);
+    if (target) {
+      target.isFavorite = !target.isFavorite;
+      window.SeodangStorage.set('myVocab', list);
+      renderMyVocabList();
+    }
+  }
+
+  /**
+   * 단어장 검색 및 필터 칩 이벤트 바인딩
+   */
+  function setupVocabSearchAndFilter() {
+    // 실시간 검색 인풋 (readonly 해제 및 이벤트 연결)
+    if (elements.vocabSearchInput) {
+      elements.vocabSearchInput.removeAttribute('readonly');
+      elements.vocabSearchInput.addEventListener('input', function (e) {
+        vocabSearchKeyword = e.target.value;
+        renderMyVocabList();
+      });
+    }
+
+    // 카테고리 필터 칩 클릭
+    if (elements.vocabFilterChips) {
+      elements.vocabFilterChips.forEach(chip => {
+        chip.addEventListener('click', function () {
+          elements.vocabFilterChips.forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+          vocabCurrentCategory = this.textContent.trim();
+          renderMyVocabList();
+        });
+      });
+    }
   }
 
   /**
    * 이벤트 바인딩
    */
   function bindEvents() {
-    // 1. 하단 메인 탭 전환
+    // 메인 네비게이션
     elements.navItems.forEach(btn => {
       btn.addEventListener('click', function () {
-        const targetTabId = this.getAttribute('data-target');
-        switchMainTab(targetTabId);
+        switchMainTab(this.getAttribute('data-target'));
       });
     });
 
-    // 2. 헤더 MY 바로가기
     if (elements.headerMyBtn) {
-      elements.headerMyBtn.addEventListener('click', function () {
-        switchMainTab('tab-my');
-      });
+      elements.headerMyBtn.addEventListener('click', () => switchMainTab('tab-my'));
     }
 
-    // 3. MY 내부 5대 서브 뷰 전환
+    // MY 서브 탭
     elements.mySubBtns.forEach(btn => {
       btn.addEventListener('click', function () {
-        const subId = this.getAttribute('data-sub');
-        switchMySubView(subId);
+        switchMySubView(this.getAttribute('data-sub'));
       });
     });
 
-    // 4. 홈 퀵 액션 카드 클릭 이동
+    // 홈 퀵 액션
     elements.quickActionItems.forEach((item, index) => {
       item.addEventListener('click', function () {
         if (index === 0) switchMainTab('tab-camera');
@@ -429,28 +703,17 @@
       });
     });
 
-    // 5. 온보딩 모달 인터랙션
+    // 온보딩 모달
     setupOptionCards('input[name="userGrade"]', '.option-card');
     setupOptionCards('input[name="userGoal"]', '.option-card');
     setupOptionCards('input[name="userDailyQuestions"]', '.target-chip');
 
-    if (elements.btnNextStep1) {
-      elements.btnNextStep1.addEventListener('click', () => goToOnboardingStep(2));
-    }
-    if (elements.btnPrevStep2) {
-      elements.btnPrevStep2.addEventListener('click', () => goToOnboardingStep(1));
-    }
-    if (elements.btnNextStep2) {
-      elements.btnNextStep2.addEventListener('click', () => goToOnboardingStep(3));
-    }
-    if (elements.btnPrevStep3) {
-      elements.btnPrevStep3.addEventListener('click', () => goToOnboardingStep(2));
-    }
-    if (elements.btnCompleteOnboarding) {
-      elements.btnCompleteOnboarding.addEventListener('click', handleCompleteOnboarding);
-    }
+    if (elements.btnNextStep1) elements.btnNextStep1.addEventListener('click', () => goToOnboardingStep(2));
+    if (elements.btnPrevStep2) elements.btnPrevStep2.addEventListener('click', () => goToOnboardingStep(1));
+    if (elements.btnNextStep2) elements.btnNextStep2.addEventListener('click', () => goToOnboardingStep(3));
+    if (elements.btnPrevStep3) elements.btnPrevStep3.addEventListener('click', () => goToOnboardingStep(2));
+    if (elements.btnCompleteOnboarding) elements.btnCompleteOnboarding.addEventListener('click', handleCompleteOnboarding);
 
-    // 닉네임 인풋 엔터키로 완료 지원
     if (elements.onboardingNickname) {
       elements.onboardingNickname.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
@@ -460,7 +723,7 @@
       });
     }
 
-    // 6. [37 환경설정] 프로필 & 목표 클릭 시 온보딩 재오픈 (수정 모드)
+    // 환경설정 연동
     if (elements.settingProfileBtn) {
       elements.settingProfileBtn.addEventListener('click', () => {
         openOnboardingModal();
@@ -473,23 +736,44 @@
         goToOnboardingStep(2);
       });
     }
-
-    // 7. [37 환경설정] 데이터 초기화 버튼 연동
     if (elements.settingResetBtn) {
       elements.settingResetBtn.addEventListener('click', function () {
-        const confirmed = window.confirm(
-          '⚠️ 정말 모든 학습 데이터와 설정을 초기화하시겠습니까?\n초기화 시 첫 입학 온보딩 화면으로 리셋됩니다.'
-        );
-        if (confirmed && window.SeodangStorage) {
+        if (confirm('⚠️ 모든 학습 기록과 설정을 초기화하고 첫 입학 화면으로 되돌리시겠습니까?')) {
           window.SeodangStorage.clearAll();
           window.location.reload();
         }
       });
     }
 
-    // 8. 전역 스토리지 변경 수신
+    // 2-2단계: AI 풀이 요청 커스텀 이벤트 수신
+    window.addEventListener('requestAITranslation', function (e) {
+      if (e.detail && e.detail.imageDataUrl) {
+        handleAITranslationRequest(e.detail.imageDataUrl);
+      }
+    });
+
+    // 형태소 툴팁 모달 닫기 & 단어장 저장
+    if (elements.btnCloseMorphemeTooltip) {
+      elements.btnCloseMorphemeTooltip.addEventListener('click', closeMorphemeTooltip);
+    }
+    if (elements.morphemeModalOverlay) {
+      elements.morphemeModalOverlay.addEventListener('click', function (e) {
+        if (e.target === elements.morphemeModalOverlay) {
+          closeMorphemeTooltip();
+        }
+      });
+    }
+    if (elements.btnSaveToMyVocab) {
+      elements.btnSaveToMyVocab.addEventListener('click', saveCurrentMorphemeToVocab);
+    }
+
+    // 단어장 실시간 검색 & 필터
+    setupVocabSearchAndFilter();
+
+    // 스토리지 변경 수신
     window.addEventListener('storageUpdated', function () {
       renderAllProfileUI();
+      renderMyVocabList();
     });
   }
 
@@ -499,25 +783,21 @@
   function initApp() {
     cacheElements();
 
-    // 1. 중앙 스토리지 초기화 및 스트릭 체크
     if (window.SeodangStorage) {
       window.SeodangStorage.init();
     }
 
-    // 2. 전체 프로필 UI 동기화
     renderAllProfileUI();
+    renderMyVocabList();
 
-    // 3. 온보딩 완료 여부 검사: 미완료 시 모달 자동 팝업
     if (window.SeodangStorage && !window.SeodangStorage.isOnboarded()) {
       openOnboardingModal();
     } else {
       closeOnboardingModal();
     }
 
-    // 4. 이벤트 바인딩
     bindEvents();
-
-    console.log('🏛️ 애국 AI (서당 AI) 1-3단계: 온보딩 마법사 모달 & 스트릭 체크 시스템 구축 완료');
+    console.log('🏛️ 애국 AI (서당 AI) 2-2단계: AI 풀이 엔진 및 내 단어장 연동 파이프라인 완결');
   }
 
   if (document.readyState === 'loading') {
@@ -526,13 +806,12 @@
     initApp();
   }
 
-  // 외부 공개 API
   window.AegukApp = {
     switchMainTab: switchMainTab,
     switchMySubView: switchMySubView,
     renderAllProfileUI: renderAllProfileUI,
-    openOnboardingModal: openOnboardingModal,
-    closeOnboardingModal: closeOnboardingModal
+    renderMyVocabList: renderMyVocabList,
+    showToast: showToast
   };
 
 })(window, document);
