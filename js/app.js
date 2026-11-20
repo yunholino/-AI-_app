@@ -196,6 +196,17 @@
       }
     });
 
+    // 카메라 탭 진입 / 이탈 시 미디어 스트림 제어
+    if (window.AegukCamera) {
+      if (targetTabId === 'tab-camera') {
+        if (!window.AegukCamera.getCurrentImage()) {
+          window.AegukCamera.startCamera();
+        }
+      } else {
+        window.AegukCamera.stopCamera();
+      }
+    }
+
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
       mainContent.scrollTop = 0;
