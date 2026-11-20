@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>애국 AI - 고전 국어 학습</title>
+  <!-- 본고딕 / 본명조 웹폰트 (고어 ㆍ, ㅿ, ㆆ, ᄠ 등 유니코드 지원) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Serif+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <!-- 메인 스타일시트 -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 앱 반응형 메인 컨테이너 (모바일 360~430px 최적화 / 데스크톱 중앙 정렬 뷰포트) -->
+  <div class="app-container">
+
+    <!-- ========================================================
+         상단 헤더
+         ======================================================== -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="app-logo">
+          <span class="seal-mark">愛國</span>
+          <div class="logo-title-group">
+            <h1 class="logo-text">애국 AI</h1>
+            <span class="logo-sub">고전 국어 AI 훈장</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- 사용자 닉네임 표시 영역 -->
+        <div class="user-badge" id="headerUserBadge">
+          <span class="badge-role">선비</span>
+          <span class="user-name" id="headerUserName">홍길동</span>
+        </div>
+
+        <!-- 연속 출석일 (스트릭) -->
+        <div class="streak-badge" title="연속 출석일">
+          <span class="streak-fire">🔥</span>
+          <span class="streak-count" id="headerStreakCount">12일째</span>
+        </div>
+
+        <!-- MY 바로가기 버튼 -->
+        <button class="my-shortcut-btn" id="headerMyBtn" aria-label="마이페이지 바로가기">
+          <span class="icon-user">👤</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ========================================================
+         메인 영역 (5개 메인 탭 컨테이너 구조)
+         ======================================================== -->
+    <main class="main-content">
+
+      <!-- ======================================================
+           ① [홈] 탭: 대시보드 요약 및 오늘의 학습 추천
+           ====================================================== -->
+      <section class="tab-pane active" id="tab-home" data-tab="home">
+        <!-- 오늘의 학습 추천 배너 -->
+        <div class="welcome-card">
+          <div class="welcome-tag">오늘의 서당 강독</div>
+          <h2 class="welcome-title">오늘도 깊이 있는 고전문학을 음미해 보시겠습니까?</h2>
+          <p class="welcome-desc">연속 12일째 출석 중입니다. 오늘의 추천 학습을 완료하고 50 XP를 획득하세요.</p>
+        </div>
+
+        <!-- 오늘의 추천 어휘 카드 -->
+        <div class="card daily-vocab-card">
+          <div class="card-header-line">
+            <span class="card-pill">오늘의 필수 고어</span>
+            <span class="card-sub-info">〈훈민정음 언해본〉</span>
+          </div>
+          <div class="vocab-highlight">
+            <h3 class="highlight-word old-hangul">ᄉᆞᄆᆞᆺ디</h3>
+            <span class="highlight-meaning">【동사】 (뜻이) 서로 통하다, 사무치다</span>
+          </div>
+          <p class="vocab-example old-hangul">"나랏말ᄊᆞ미 中國에 달아 文字와로 서르 <strong>ᄉᆞᄆᆞᆺ디</strong> 아니ᄒᆞᆯᄊᆡ"</p>
+        </div>
+
+        <!-- 퀵 액션 카드 3종 -->
+        <div class="quick-actions-grid">
+          <div class="quick-action-item">
+            <span class="qa-icon">📷</span>
+            <div class="qa-text">
+              <strong>옛글 사진 촬영</strong>
+              <span>문서·시험지 AI 풀이</span>
+            </div>
+          </div>
+          <div class="quick-action-item">
+            <span class="qa-icon">📖</span>
+            <div class="qa-text">
+              <strong>플래시카드 암기</strong>
+              <span>필수 고어 15선</span>
+            </div>
+          </div>
+          <div class="quick-action-item">
+            <span class="qa-icon">⚔️</span>
+            <div class="qa-text">
+              <strong>10초 스피드 퀴즈</strong>
+              <span>AI 봇과 실시간 대결</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 학습 요약 미니 카드 -->
+        <div class="card summary-card">
+          <h4 class="section-title">📊 나의 학습 현황</h4>
+          <div class="summary-stat-row">
+            <div class="summary-stat-box">
+              <span class="num">12일</span>
+              <span class="lbl">연속 학습</span>
+            </div>
+            <div class="summary-stat-box">
+              <span class="num">47개</span>
+              <span class="lbl">외운 단어</span>
+            </div>
+            <div class="summary-stat-box">
+              <span class="num">82%</span>
+              <span class="lbl">퀴즈 정답률</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ======================================================
+           ② [학습] 탭: 고전문학 대역 뷰어 및 플래시카드
+           ====================================================== -->
+      <section class="tab-pane" id="tab-study" data-tab="study">
+        <div class="tab-banner">
+          <span class="banner-badge">문학 & 어휘 강독</span>
+          <h2 class="tab-title">고전문학 대역 & 암기</h2>
+          <p class="tab-desc">원문과 현대어를 1:1로 비교하고 3D 플래시카드로 필수 고어를 체득합니다.</p>
+        </div>
+
+        <!-- 서브 모드 전환 스위치 -->
+        <div class="sub-segmented-control">
+          <button class="seg-btn active">🎴 3D 플래시카드</button>
+          <button class="seg-btn">📜 문학 1:1 대역 뷰어</button>
+        </div>
+
+        <!-- 3D 플래시카드 미리보기 영역 -->
+        <div class="card flashcard-container">
+          <div class="card-3d-mock">
+            <div class="card-front">
+              <span class="card-category-tag">필수 고어 #01</span>
+              <h3 class="card-main-word old-hangul">어엿브다</h3>
+              <p class="card-sample-sentence old-hangul">"내 이를 <u>어엿비</u> 너겨 새로 스믈여듧 字ᄅᆞᆯ ᄆᆡᆼᄀᆞ노니"</p>
+              <div class="card-hint">💡 카드를 누르면 뜻이 뒤집힙니다</div>
+            </div>
+          </div>
+          <div class="flashcard-actions">
+            <button class="btn btn-secondary" disabled>🔄 다시 볼래요</button>
+            <button class="btn btn-primary" disabled>✅ 외웠어요</button>
+          </div>
+        </div>
+
+        <!-- 대역 뷰어 미리보기 카드 -->
+        <div class="card parallel-preview-card">
+          <h4 class="section-title">📖 〈관동별곡〉 대역 뷰어 미리보기</h4>
+          <div class="parallel-row">
+            <div class="parallel-original old-hangul">江강湖호애 病병이 깁퍼 竹듁林님의 누엇더니</div>
+            <div class="parallel-translation">자연을 사랑하는 병이 깊어 담양 창평에서 은거하고 있었더니</div>
+          </div>
+          <div class="parallel-row">
+            <div class="parallel-original old-hangul">關관東동 八팔百ᄇᆡᆨ里리의 方방面면을 맛디시니</div>
+            <div class="parallel-translation">강원도 팔백 리의 관찰사 직분을 맡겨 주시니</div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ======================================================
+           ③ [촬영] 탭: 웹캠 실시간 캡처 및 AI 옛글 풀이
+           ====================================================== -->
+      <section class="tab-pane" id="tab-camera" data-tab="camera">
+        <div class="tab-banner">
+          <span class="banner-badge">AI 비전 해독</span>
+          <h2 class="tab-title">옛글 촬영 및 AI 강독</h2>
+          <p class="tab-desc">고문서, 시험 지문, 훈민정음 활자를 카메라로 비추면 현대어로 낱낱이 풀이합니다.</p>
+        </div>
+
+        <!-- 카메라 뷰파인더 플레이스홀더 -->
+        <div class="card viewfinder-card">
+          <div class="viewfinder-placeholder">
+            <div class="viewfinder-icon">📷</div>
+            <h3 class="vf-title">카메라 화면 준비 중</h3>
+            <p class="vf-desc">2단계에서 웹캠 비디오 스트림 및 촬영 캔버스가 연동됩니다.</p>
+          </div>
+          <div class="viewfinder-controls">
+            <button class="btn btn-secondary" disabled>📁 사진 파일 올리기</button>
+            <button class="btn btn-primary" disabled>📷 찰칵 촬영하기</button>
+          </div>
+        </div>
+
+        <!-- AI 해독 예시 정보 카드 -->
+        <div class="card info-guide-card">
+          <h4 class="section-title">✨ 고어 특수 활자 완벽 지원</h4>
+          <p class="info-guide-text">
+            ㆍ(아래아), ㅿ(반시옷), ㆆ(여린히읗), ᄠ(어두자음군) 등의 고어 표기가 원문 그대로 보존되며,
+            형태소 단위로 현대어 번역 및 문법 해설 툴팁이 제공됩니다.
+          </p>
+        </div>
+      </section>
+
+
+      <!-- ======================================================
+           ④ [게임] 탭: 10초 타임어택 퀴즈 대결
+           ====================================================== -->
+      <section class="tab-pane" id="tab-game" data-tab="game">
+        <div class="tab-banner">
+          <span class="banner-badge">장원급제 도전</span>
+          <h2 class="tab-title">10초 타임어택 퀴즈 대결</h2>
+          <p class="tab-desc">인공지능 유생 봇과 실시간 스피드 대결을 펼치고 과거 시험에 급제하세요.</p>
+        </div>
+
+        <!-- 신분 티어 안내 카드 -->
+        <div class="card tier-banner-card">
+          <div class="tier-mark">進士</div>
+          <div class="tier-details">
+            <span class="tier-tag">현재 신분</span>
+            <h3 class="tier-title">진사 (進士 · 3급)</h3>
+            <p class="tier-progress-text">다음 등급 [급제]까지 3승 남음</p>
+          </div>
+        </div>
+
+        <!-- 퀴즈 대전 규칙 & 매칭 카드 -->
+        <div class="card game-match-card">
+          <h4 class="section-title">⚔️ 대결 규칙 안내</h4>
+          <ul class="rule-list">
+            <li><strong>1게임 5문항:</strong> 고어 어휘 뜻 맞히기 및 원문 빈칸 채우기</li>
+            <li><strong>문항당 10초 제한:</strong> 남은 시간에 비례하여 스피드 추가 점수</li>
+            <li><strong>틀린 문제 자동 수집:</strong> 오답은 MY [34 오답노트]에 즉시 적립</li>
+          </ul>
+
+          <button class="btn btn-primary btn-block btn-game-start" disabled>
+            ⚔️ AI 유생 봇과 빠른 매칭 시작 (3단계 연동)
+          </button>
+        </div>
+      </section>
+
+
+      <!-- ======================================================
+           ⑤ [MY] 탭: 마이페이지 허브 및 5대 서브 화면 컨테이너
+           ====================================================== -->
+      <section class="tab-pane" id="tab-my" data-tab="my">
+        
+        <!-- MY 허브 프로필 헤더 카드 -->
+        <div class="my-profile-header">
+          <div class="my-avatar">선비</div>
+          <div class="my-profile-info">
+            <div class="my-name-row">
+              <h2 class="my-username">선비 홍길동</h2>
+              <span class="my-badge-tag">중학교 2학년</span>
+            </div>
+            <p class="my-goal-text">목표: 고전 독해 · 한자어 완성</p>
+          </div>
+        </div>
+
+        <!-- MY 5대 서브 뷰 전환 탭 스위처 -->
+        <nav class="my-sub-nav" aria-label="마이페이지 서브 메뉴">
+          <button class="my-sub-btn active" data-sub="sub-vocab">33 단어장</button>
+          <button class="my-sub-btn" data-sub="sub-wrong">34 오답노트</button>
+          <button class="my-sub-btn" data-sub="sub-stats">35 통계</button>
+          <button class="my-sub-btn" data-sub="sub-badges">36 배지·XP</button>
+          <button class="my-sub-btn" data-sub="sub-settings">37 설정</button>
+        </nav>
+
+        <!-- ----------------------------------------------------
+             [33 내 단어장] 서브 화면
+             ---------------------------------------------------- -->
+        <div class="my-sub-view active" id="sub-vocab">
+          <!-- 실시간 검색창 -->
+          <div class="search-bar-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="단어, 한자, 뜻, 출처 검색..." readonly>
+          </div>
+
+          <!-- 카테고리 필터 칩 -->
+          <div class="filter-chips-row">
+            <button class="chip active">전체</button>
+            <button class="chip">옛말</button>
+            <button class="chip">한자어</button>
+            <button class="chip">사자성어</button>
+          </div>
+
+          <!-- 저장 개수 인디케이터 -->
+          <div class="vocab-count-indicator">
+            저장한 단어 <strong>4</strong>개
+          </div>
+
+          <!-- 단어 카드 리스트 -->
+          <div class="vocab-list">
+            <!-- 단어 1 -->
+            <div class="vocab-card">
+              <div class="vocab-main">
+                <div class="vocab-word-row">
+                  <h4 class="vocab-word old-hangul">사맛다</h4>
+                  <span class="vocab-cat-badge">옛말</span>
+                </div>
+                <p class="vocab-meaning">서로 통하다, 뜻이 통하다</p>
+                <span class="vocab-source">출전: 훈민정음 언해본</span>
+              </div>
+              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
+            </div>
+
+            <!-- 단어 2 -->
+            <div class="vocab-card">
+              <div class="vocab-main">
+                <div class="vocab-word-row">
+                  <h4 class="vocab-word">문해력 <span class="hanja">(文解力)</span></h4>
+                  <span class="vocab-cat-badge">한자어</span>
+                </div>
+                <p class="vocab-meaning">글을 읽고 이해하는 능력</p>
+                <span class="vocab-source">출전: 수능·내신 필수어휘</span>
+              </div>
+              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
+            </div>
+
+            <!-- 단어 3 -->
+            <div class="vocab-card">
+              <div class="vocab-main">
+                <div class="vocab-word-row">
+                  <h4 class="vocab-word">각골난망 <span class="hanja">(刻骨難忘)</span></h4>
+                  <span class="vocab-cat-badge">사자성어</span>
+                </div>
+                <p class="vocab-meaning">은혜를 뼈에 새겨 잊지 못함</p>
+                <span class="vocab-source">출전: 필수 사자성어</span>
+              </div>
+              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
+            </div>
+
+            <!-- 단어 4 -->
+            <div class="vocab-card">
+              <div class="vocab-main">
+                <div class="vocab-word-row">
+                  <h4 class="vocab-word old-hangul">벗</h4>
+                  <span class="vocab-cat-badge">옛말</span>
+                </div>
+                <p class="vocab-meaning">친구 또는 가까운 사이</p>
+                <span class="vocab-source">출전: 고전시가</span>
+              </div>
+              <button class="fav-star-btn active" aria-label="즐겨찾기">★</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------
+             [34 오답노트] 서브 화면
+             ---------------------------------------------------- -->
+        <div class="my-sub-view" id="sub-wrong">
+          <!-- 상단 대형 요약 카드 (다크그린 테마) -->
+          <div class="dark-green-card wrong-summary-card">
+            <div class="wrong-stat-item">
+              <span class="ws-label">이번 주 오답</span>
+              <span class="ws-value">2<small>문제</small></span>
+            </div>
+            <div class="ws-divider"></div>
+            <div class="wrong-stat-item">
+              <span class="ws-label">복습 완료</span>
+              <span class="ws-value">1<small>문제</small></span>
+            </div>
+          </div>
+
+          <h4 class="sub-section-title">다시 볼 문제</h4>
+
+          <!-- 다시 볼 문제 리스트 -->
+          <div class="wrong-list">
+            <!-- 오답 1 -->
+            <div class="wrong-card">
+              <div class="wrong-info">
+                <h5 class="wrong-question old-hangul">사맛다</h5>
+                <div class="wrong-choice-row">
+                  <span class="choice-wrong">선택: 바라보다</span>
+                  <span class="choice-correct">정답: 서로 통하다</span>
+                </div>
+              </div>
+              <button class="btn btn-review" disabled>복습</button>
+            </div>
+
+            <!-- 오답 2 -->
+            <div class="wrong-card">
+              <div class="wrong-info">
+                <h5 class="wrong-question">각골난망 (刻骨難忘)</h5>
+                <div class="wrong-choice-row">
+                  <span class="choice-wrong">선택: 매우 놀람</span>
+                  <span class="choice-correct">정답: 은혜를 잊지 못함</span>
+                </div>
+              </div>
+              <button class="btn btn-review" disabled>복습</button>
+            </div>
+
+            <!-- 복습 완료된 항목 -->
+            <div class="wrong-card reviewed">
+              <div class="wrong-info">
+                <h5 class="wrong-question">문해력 (文解力)</h5>
+                <div class="wrong-choice-row">
+                  <span class="choice-done">✅ 복습 완료 (읽고 이해하는 능력)</span>
+                </div>
+              </div>
+              <span class="badge-done">완료</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------
+             [35 학습 통계] 서브 화면
+             ---------------------------------------------------- -->
+        <div class="my-sub-view" id="sub-stats">
+          <!-- 연속 학습일 요약 카드 -->
+          <div class="stats-streak-card">
+            <div class="streak-icon-wrap">🔥</div>
+            <div class="streak-text-wrap">
+              <h3 class="streak-days">연속 학습 12일</h3>
+              <p class="streak-sub">이번 주 5일 학습을 완료했습니다.</p>
+            </div>
+          </div>
+
+          <!-- 주간 학습 시간 CSS 막대 그래프 -->
+          <div class="card chart-card">
+            <h4 class="section-title">주간 학습 시간 (분)</h4>
+            <div class="bar-chart-container">
+              <!-- 월: 20분 -->
+              <div class="chart-col">
+                <span class="bar-val">20</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="height: 33%;"></div>
+                </div>
+                <span class="bar-day">월</span>
+              </div>
+              <!-- 화: 35분 -->
+              <div class="chart-col">
+                <span class="bar-val">35</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="height: 58%;"></div>
+                </div>
+                <span class="bar-day">화</span>
+              </div>
+              <!-- 수: 40분 -->
+              <div class="chart-col">
+                <span class="bar-val">40</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="height: 66%;"></div>
+                </div>
+                <span class="bar-day">수</span>
+              </div>
+              <!-- 목: 50분 -->
+              <div class="chart-col">
+                <span class="bar-val">50</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="height: 83%;"></div>
+                </div>
+                <span class="bar-day">목</span>
+              </div>
+              <!-- 금: 30분 -->
+              <div class="chart-col">
+                <span class="bar-val">30</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="height: 50%;"></div>
+                </div>
+                <span class="bar-day">금</span>
+              </div>
+              <!-- 토: 60분 (최고치) -->
+              <div class="chart-col highlight-col">
+                <span class="bar-val">60</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="height: 100%;"></div>
+                </div>
+                <span class="bar-day">토</span>
+              </div>
+              <!-- 일: 25분 -->
+              <div class="chart-col">
+                <span class="bar-val">25</span>
+                <div class="bar-track">
+                  <div class="bar-fill" style="height: 41%;"></div>
+                </div>
+                <span class="bar-day">일</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 정답률 및 어휘수 지표 카드 2열 -->
+          <div class="stats-twin-grid">
+            <div class="twin-box">
+              <span class="tb-title">정답률</span>
+              <span class="tb-val">82%</span>
+              <span class="tb-sub">전체 퀴즈 게임</span>
+            </div>
+            <div class="twin-box">
+              <span class="tb-title">학습한 어휘</span>
+              <span class="tb-val">47개</span>
+              <span class="tb-sub">누적 마스터 어휘</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------
+             [36 배지·경험치] 서브 화면
+             ---------------------------------------------------- -->
+        <div class="my-sub-view" id="sub-badges">
+          <!-- 상단 레벨 & XP 카드 (다크 그린 배경) -->
+          <div class="dark-green-card level-card">
+            <div class="level-top-row">
+              <div class="level-badge-pill">LEVEL 7</div>
+              <span class="level-title">한글 탐험가</span>
+            </div>
+            <div class="xp-progress-wrap">
+              <div class="xp-text-row">
+                <span>경험치 (XP)</span>
+                <strong>1,240 / 2,000 XP</strong>
+              </div>
+              <div class="xp-track">
+                <div class="xp-bar" style="width: 62%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <h4 class="sub-section-title">획득한 배지</h4>
+
+          <!-- 2x3 배지 그리드 -->
+          <div class="badge-grid">
+            <!-- [文] 첫 번역 (획득) -->
+            <div class="badge-item unlocked">
+              <div class="badge-circle">文</div>
+              <span class="badge-name">첫 번역</span>
+              <span class="badge-status">획득 완료</span>
+            </div>
+
+            <!-- [七] 7일 연속 (획득) -->
+            <div class="badge-item unlocked">
+              <div class="badge-circle">七</div>
+              <span class="badge-name">7일 연속</span>
+              <span class="badge-status">획득 완료</span>
+            </div>
+
+            <!-- [字] 어휘 수집가 (획득) -->
+            <div class="badge-item unlocked">
+              <div class="badge-circle">字</div>
+              <span class="badge-name">어휘 수집가</span>
+              <span class="badge-status">획득 완료</span>
+            </div>
+
+            <!-- [王] 게임 왕 (미획득) -->
+            <div class="badge-item locked">
+              <div class="badge-circle">🔒</div>
+              <span class="badge-name">게임 왕</span>
+              <span class="badge-status">퀴즈 10승 달성</span>
+            </div>
+
+            <!-- [古] 고전 박사 (미획득) -->
+            <div class="badge-item locked">
+              <div class="badge-circle">🔒</div>
+              <span class="badge-name">고전 박사</span>
+              <span class="badge-status">어휘 50개 마스터</span>
+            </div>
+
+            <!-- [復] 완벽 복습 (미획득) -->
+            <div class="badge-item locked">
+              <div class="badge-circle">🔒</div>
+              <span class="badge-name">완벽 복습</span>
+              <span class="badge-status">오답 10개 복습</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ----------------------------------------------------
+             [37 환경설정] 서브 화면
+             ---------------------------------------------------- -->
+        <div class="my-sub-view" id="sub-settings">
+          <!-- 계정 섹션 -->
+          <div class="settings-group">
+            <h4 class="settings-group-title">계정</h4>
+            <div class="settings-item">
+              <span class="s-label">프로필</span>
+              <span class="s-val">선비 · 중학교 2학년 <span>&gt;</span></span>
+            </div>
+            <div class="settings-item">
+              <span class="s-label">학습 목표</span>
+              <span class="s-val">고전 독해 · 한자어 <span>&gt;</span></span>
+            </div>
+          </div>
+
+          <!-- 학습 설정 섹션 -->
+          <div class="settings-group">
+            <h4 class="settings-group-title">학습 설정</h4>
+            <div class="settings-item">
+              <span class="s-label">학습 알림</span>
+              <div class="toggle-mock active">
+                <div class="toggle-handle"></div>
+              </div>
+            </div>
+            <div class="settings-item">
+              <span class="s-label">알림 시간</span>
+              <span class="s-val">매일 오후 8:00 <span>&gt;</span></span>
+            </div>
+            <div class="settings-item">
+              <span class="s-label">문제 난이도</span>
+              <span class="s-val">보통 <span>&gt;</span></span>
+            </div>
+            <div class="settings-item col-item">
+              <span class="s-label">글자 크기</span>
+              <div class="font-size-selector">
+                <button class="font-btn">작게</button>
+                <button class="font-btn active">기본</button>
+                <button class="font-btn">크게</button>
+              </div>
+            </div>
+            <div class="settings-item">
+              <span class="s-label">일일 학습 문제 수</span>
+              <span class="s-val">10문제 <span>&gt;</span></span>
+            </div>
+          </div>
+
+          <!-- 데이터 백업 & 관리 섹션 -->
+          <div class="settings-group">
+            <h4 class="settings-group-title">데이터 관리 및 백업</h4>
+            <div class="backup-btn-grid">
+              <button class="btn btn-secondary" disabled>📤 JSON 백업 파일 내보내기</button>
+              <button class="btn btn-secondary" disabled>📥 JSON 백업 파일 가져오기</button>
+            </div>
+            <button class="btn btn-danger-link" disabled>데이터 초기화</button>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- ========================================================
+         하단 고정 네비게이션 바 (5개 메인 탭)
+         ======================================================== -->
+    <nav class="bottom-nav" aria-label="메인 네비게이션">
+      <!-- 1. 홈 -->
+      <button class="nav-item active" data-target="tab-home" aria-label="홈">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">홈</span>
+      </button>
+
+      <!-- 2. 학습 -->
+      <button class="nav-item" data-target="tab-study" aria-label="문학 및 어휘 학습">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">학습</span>
+      </button>
+
+      <!-- 3. 촬영 -->
+      <button class="nav-item" data-target="tab-camera" aria-label="옛글 촬영 및 AI 해독">
+        <span class="nav-icon">📷</span>
+        <span class="nav-label">촬영</span>
+      </button>
+
+      <!-- 4. 게임 -->
+      <button class="nav-item" data-target="tab-game" aria-label="10초 타임어택 퀴즈">
+        <span class="nav-icon">⚔️</span>
+        <span class="nav-label">게임</span>
+      </button>
+
+      <!-- 5. MY -->
+      <button class="nav-item" data-target="tab-my" aria-label="마이페이지">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">MY</span>
+      </button>
+    </nav>
+
+  </div>
+</body>
+</html>
