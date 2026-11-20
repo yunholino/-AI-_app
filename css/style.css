@@ -1554,7 +1554,314 @@ html, body {
   background-color: rgba(30, 77, 69, 0.06);
 }
 
-/* --- 8. 미디어 쿼리 (데스크톱 및 소형 모바일) --- */
+/* --- 9. 입학 온보딩 마법사 모달 (1-3단계) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(30, 20, 15, 0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.onboarding-card {
+  width: 100%;
+  max-width: 390px;
+  background-color: var(--bg-hanji);
+  border: 2px solid var(--color-border-dark);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 36px rgba(44, 36, 30, 0.35);
+  padding: 22px 18px;
+  animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+@keyframes modalScaleUp {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.onboarding-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.onboarding-seal {
+  display: inline-block;
+  background-color: var(--color-seal);
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 1px;
+  box-shadow: 0 2px 4px rgba(183, 28, 28, 0.3);
+}
+
+.onboarding-title {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--color-ink-deep);
+  margin-top: 6px;
+}
+
+.onboarding-sub {
+  font-size: 11.5px;
+  color: var(--color-ink-muted);
+  margin-top: 2px;
+}
+
+/* 3단계 스텝 인디케이터 */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.step-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--color-border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-ink-light);
+  transition: all 0.2s ease;
+}
+
+.step-dot.active .step-num {
+  background-color: var(--color-dark-green);
+  color: #ffffff;
+  border-color: var(--color-dark-green);
+  box-shadow: 0 2px 6px rgba(30, 77, 69, 0.35);
+}
+
+.step-dot.completed .step-num {
+  background-color: var(--color-green-light);
+  color: var(--color-dark-green);
+  border-color: var(--color-dark-green);
+}
+
+.step-label {
+  font-size: 9.5px;
+  color: var(--color-ink-light);
+  font-weight: 500;
+}
+
+.step-dot.active .step-label {
+  font-weight: 700;
+  color: var(--color-dark-green);
+}
+
+.step-line {
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-border);
+  margin-bottom: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.step-line.active {
+  background-color: var(--color-dark-green);
+}
+
+/* 스텝 콘텐츠 및 옵션 카드 */
+.onboarding-step {
+  display: none;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.onboarding-step.active {
+  display: block;
+}
+
+.step-question {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-ink-deep);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.option-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.option-card {
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option-card input[type="radio"] {
+  display: none;
+}
+
+.option-card:hover {
+  border-color: var(--color-green-accent);
+}
+
+.option-card.active {
+  border-color: var(--color-dark-green);
+  background-color: var(--color-green-light);
+  box-shadow: 0 2px 6px rgba(30, 77, 69, 0.12);
+}
+
+.opt-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.opt-text strong {
+  display: block;
+  font-size: 13px;
+  color: var(--color-ink-deep);
+  line-height: 1.25;
+}
+
+.opt-text span {
+  display: block;
+  font-size: 11px;
+  color: var(--color-ink-muted);
+  margin-top: 1px;
+}
+
+/* 폼 인풋 및 일일 목표 칩 */
+.input-form-group {
+  margin-bottom: 8px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-ink-deep);
+  margin-bottom: 4px;
+}
+
+.form-input {
+  width: 100%;
+  height: 42px;
+  background-color: #ffffff;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  font-size: 13.5px;
+  color: var(--color-ink-deep);
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus {
+  border-color: var(--color-dark-green);
+}
+
+.input-tip {
+  display: block;
+  font-size: 11px;
+  color: var(--color-ink-light);
+  margin-top: 4px;
+}
+
+.input-tip.error {
+  color: var(--color-wrong);
+  font-weight: 700;
+}
+
+.daily-target-chips {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.target-chip {
+  display: block;
+  text-align: center;
+  background-color: var(--bg-card);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 9px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.target-chip input[type="radio"] {
+  display: none;
+}
+
+.target-chip:hover {
+  border-color: var(--color-green-accent);
+}
+
+.target-chip.active {
+  background-color: var(--color-green-light);
+  border-color: var(--color-dark-green);
+  color: var(--color-dark-green);
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.modal-actions.single {
+  grid-template-columns: 1fr;
+}
+
+/* 설정 탭 클릭 가능한 아이템 */
+.settings-item.clickable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: var(--radius-xs);
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.settings-item.clickable:hover {
+  background-color: rgba(30, 77, 69, 0.05);
+}
+
+/* --- 10. 미디어 쿼리 (데스크톱 및 소형 모바일) --- */
 @media (max-width: 360px) {
   .nav-label {
     font-size: 9.5px;
@@ -1565,6 +1872,15 @@ html, body {
   .my-sub-btn {
     padding: 5px 9px;
     font-size: 10.5px;
+  }
+  .onboarding-card {
+    padding: 18px 14px;
+  }
+  .opt-text strong {
+    font-size: 12px;
+  }
+  .opt-text span {
+    font-size: 10px;
   }
 }
 
