@@ -111,6 +111,9 @@
     dom.flashcardCard.style.display = 'block';
     if (dom.btnVocabAgain) dom.btnVocabAgain.disabled = false;
     if (dom.btnVocabMaster) dom.btnVocabMaster.disabled = false;
+    // 완료 화면에서 돌아올 때 고정 버튼 다시 표시
+    const fixedActions = document.getElementById('flashcardFixedActions');
+    if (fixedActions) fixedActions.classList.add('visible');
 
     const currentItem = cardQueue[currentIndex];
 
@@ -195,8 +198,9 @@
   function showCompletionView() {
     if (dom.flashcardCard) dom.flashcardCard.style.display = 'none';
     if (dom.flashcardCompleteBox) dom.flashcardCompleteBox.style.display = 'block';
-    if (dom.btnVocabAgain) dom.btnVocabAgain.disabled = true;
-    if (dom.btnVocabMaster) dom.btnVocabMaster.disabled = true;
+    // 완료 시 고정 버튼 숨기기
+    const fixedActions = document.getElementById('flashcardFixedActions');
+    if (fixedActions) fixedActions.classList.remove('visible');
 
     if (dom.cardProgressBar) {
       dom.cardProgressBar.style.width = '100%';

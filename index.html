@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>서당 AI - AI 고전 국어 학습 앱</title>
+  <title>애(AI)국어 - AI 고전 국어 학습 앱</title>
   
   <!-- 웹폰트: 본고딕 & 본명조 (옛한글 ㆍ, ㅿ, ㆆ, ᄠ 안전 렌더링) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,9 +22,9 @@
     <header class="app-header">
       <div class="header-left">
         <div class="app-logo">
-          <span class="seal-mark">書</span>
+          <span class="seal-mark">愛</span>
           <div class="logo-title-group">
-            <h1 class="logo-text">서당 AI</h1>
+            <h1 class="logo-text">애(AI)국어</h1>
             <span class="logo-sub">고전 국어 스마트 서당</span>
           </div>
         </div>
@@ -183,15 +183,7 @@
             </div>
           </div>
 
-          <!-- 하단 학습 완료/복습 버튼 그룹 -->
-          <div class="flashcard-controls">
-            <button type="button" class="btn btn-secondary btn-flash" id="btnVocabAgain">
-              <span>🔄</span> 다시 볼래요
-            </button>
-            <button type="button" class="btn btn-primary btn-flash" id="btnVocabMaster">
-              <span>✅</span> 외웠어요
-            </button>
-          </div>
+          <!-- 하단 학습 완료/복습 버튼 (고정 플로팅 버튼으로 대체됨 - 아래 전역영역 참조) -->
 
           <!-- 전 문항 암기 완료 시 노출 카드 -->
           <div class="flashcard-complete-box" id="flashcardCompleteBox" style="display: none;">
@@ -252,14 +244,14 @@
             <div class="scan-crosshair"></div>
             <div class="scan-guide-text">옛글을 사각형 틀 안에 맞추어 촬영하세요</div>
           </div>
+        </div>
 
-          <!-- 카메라 미지원 / 권한 거부 시 대체 화면 -->
-          <div class="camera-fallback-box" id="cameraFallbackBox" style="display: none;">
-            <span class="fallback-icon">📷</span>
-            <h3 class="fallback-title">카메라 접근 안내</h3>
-            <p class="fallback-msg" id="cameraFallbackMsg">카메라를 켜거나 아래 [사진 파일 올리기]로 고문서 이미지를 선택해 주세요.</p>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnStartCameraStream">카메라 다시 연결 시도</button>
-          </div>
+        <!-- 카메라 미지원 / 권한 거부 시 대체 메시지 (뷰파인더 외부) -->
+        <div class="camera-fallback-box" id="cameraFallbackBox" style="display: none;">
+          <span class="fallback-icon">📷</span>
+          <h3 class="fallback-title">카메라 접근 안내</h3>
+          <p class="fallback-msg" id="cameraFallbackMsg">카메라를 켜거나 아래 [사진 파일 올리기]로 고문서 이미지를 선택해 주세요.</p>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnStartCameraStream">카메라 다시 연결 시도</button>
         </div>
 
         <!-- 숨김 파일 인풋 -->
@@ -291,7 +283,7 @@
         <!-- AI 분석 중 로딩 스피너 카드 -->
         <div class="card ai-loading-card" id="aiLoadingCard" style="display: none;">
           <div class="spinner-ink"></div>
-          <h4 class="loading-title">서당 AI 훈장 강독 중...</h4>
+          <h4 class="loading-title">애(AI)국어 훈장 강독 중...</h4>
           <p class="loading-sub">옛글의 ㆍ(아래아)와 형태소를 분해하고 1:1 현대어 대역을 작성하고 있습니다.</p>
         </div>
 
@@ -459,7 +451,6 @@
           <button type="button" class="my-sub-btn" data-sub="sub-wrong">34 오답노트</button>
           <button type="button" class="my-sub-btn" data-sub="sub-stats">35 학습 통계</button>
           <button type="button" class="my-sub-btn" data-sub="sub-badges">36 배지·경험치</button>
-          <button type="button" class="my-sub-btn" data-sub="sub-settings">37 환경설정</button>
         </div>
 
         <!-- 33 내 단어장 서브 뷰 -->
@@ -649,6 +640,16 @@
   <!-- ============================================== -->
   <!-- 4. 글로벌 모달 & 토스트 오버레이 레이어 -->
   <!-- ============================================== -->
+
+  <!-- 0) 플래시카드 고정 하단 버튼 (학습 탭 활성화 시에만 표시) -->
+  <div class="flashcard-fixed-actions" id="flashcardFixedActions">
+    <button type="button" class="btn btn-secondary btn-flash" id="btnVocabAgain">
+      <span>🔄</span> 다시 볼래요
+    </button>
+    <button type="button" class="btn btn-primary btn-flash" id="btnVocabMaster">
+      <span>✅</span> 외웠어요
+    </button>
+  </div>
 
   <!-- 1) 3단계 서당 입학 온보딩 모달 (1-3단계) -->
   <div class="onboarding-modal-overlay" id="onboardingModal" style="display: none;">

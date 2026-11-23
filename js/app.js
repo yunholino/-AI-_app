@@ -278,6 +278,16 @@
     if (mainContent) {
       mainContent.scrollTop = 0;
     }
+
+    // 플래시카드 고정 버튼: 학습 탭 활성 시에만 표시
+    const flashcardFixedActions = document.getElementById('flashcardFixedActions');
+    if (flashcardFixedActions) {
+      if (targetTabId === 'tab-study') {
+        flashcardFixedActions.classList.add('visible');
+      } else {
+        flashcardFixedActions.classList.remove('visible');
+      }
+    }
   }
 
   /**
@@ -844,7 +854,10 @@
     });
 
     if (elements.headerMyBtn) {
-      elements.headerMyBtn.addEventListener('click', () => switchMainTab('tab-my'));
+      elements.headerMyBtn.addEventListener('click', () => {
+        switchMainTab('tab-my');
+        switchMySubView('sub-settings');
+      });
     }
 
     // MY 서브 탭
@@ -883,19 +896,8 @@
       });
     }
 
-    // 환경설정 연동
-    if (elements.settingProfileBtn) {
-      elements.settingProfileBtn.addEventListener('click', () => {
-        openOnboardingModal();
-        goToOnboardingStep(1);
-      });
-    }
-    if (elements.settingGoalBtn) {
-      elements.settingGoalBtn.addEventListener('click', () => {
-        openOnboardingModal();
-        goToOnboardingStep(2);
-      });
-    }
+    // 환경설정 연동 (settings.js에서 처리하므로 중복 바인딩 제거)
+    // settingProfileBtn, settingGoalBtn은 settings.js의 openProfileEditModal로 처리됨
     if (elements.settingResetBtn) {
       elements.settingResetBtn.addEventListener('click', function () {
         if (confirm('⚠️ 모든 학습 기록과 설정을 초기화하고 첫 입학 화면으로 되돌리시겠습니까?')) {
